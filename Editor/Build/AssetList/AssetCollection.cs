@@ -2,10 +2,12 @@
 using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
+
 namespace AssetList
 {
     public class AssetCollection
     {
+        public EAssetCollectionType assetCollectionType;
         public string rootDirectory;
         public List<AssetInfo> assetInfoList = new List<AssetInfo>();
         public string savePath;

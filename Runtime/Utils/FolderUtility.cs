@@ -88,7 +88,7 @@ public static class FolderUtility
         {
             string dirName = Path.GetFileName(subDir);
             string destinationSubDir = Path.Combine(destinationDir, dirName);
-            CopyDirectory(subDir, destinationSubDir);
+            CopyDirectory(subDir, destinationSubDir, ignoreFileTypeList);
         }
     }
 

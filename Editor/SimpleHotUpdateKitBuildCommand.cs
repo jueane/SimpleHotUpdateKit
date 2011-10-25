@@ -78,25 +78,33 @@ public static class SimpleHotUpdateKitBuildCommand
             versionInfo.resourceVersion = remoteResVersion;
         }
 
-        // Copy bundled assets to Application.streamingAssetsPath
-        string bundledAssetsPath = null;
-        if (isFullPackage)
-        {
-            bundledAssetsPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.loadRootDirectory);
-            FolderUtility.ClearDirectory(bundledAssetsPath);
-            FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingData, bundledAssetsPath);
-            if (includeResource && copyResourcesToStreamingData)
-                FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingDataRes, bundledAssetsPath);
-        }
-
-        AssetsListGenerator.SaveFileList(includeResource, versionInfo);
+        var allAssetList = AssetsListGenerator.SaveFileList(includeResource, versionInfo);
 
         var verJson = JsonConvert.SerializeObject(versionInfo);
         File.WriteAllText(Path.Combine(BuildConst.FullPathForUploadingDataNoCache, ApplicationConst.DataPointerFile), verJson);
 
+        // Copy bundled assets to Application.streamingAssetsPath
         if (isFullPackage)
         {
+            var bundledAssetsPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.loadRootDirectory);
             File.WriteAllText(Path.Combine(bundledAssetsPath, ApplicationConst.DataPointerFile), verJson);
+
+            foreach (var curAssetList in allAssetList)
+            {
+                if (curAssetList.assetCollectionType == EAssetCollectionType.Res && (!includeResource || !copyResourcesToStreamingData))
+                    continue;
+
+                var rootDirectory = curAssetList.rootDirectory;
+                foreach (var curFileInfo in curAssetList.assetInfoList)
+                {
+                    var srcPath = $"{rootDirectory}/{curFileInfo.redirectRelativePath}";
+                    var dstPath = $"{bundledAssetsPath}/{curFileInfo.relativePath}";
+                    var dstChecksumPath = $"{dstPath}.checksum";
+                    FolderUtility.EnsurePathExists(Directory.GetParent(dstChecksumPath).FullName);
+                    File.Copy(srcPath, dstPath);
+                    File.WriteAllText(dstChecksumPath, curFileInfo.crc.ToString());
+                }
+            }
         }
 
         AssetDatabase.Refresh();
