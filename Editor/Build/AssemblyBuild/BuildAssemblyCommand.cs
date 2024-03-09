@@ -83,7 +83,7 @@ public static class BuildAssemblyCommand
         string aotAssembliesDstDir = BuildConst.aot_save_dir_path;
         FolderUtility.EnsurePathExists(aotAssembliesDstDir);
 
-        foreach (var dll in AOTMetaDataManager.PatchedAOTAssemblyList)
+        foreach (var dll in AOTGenericReferences.PatchedAOTAssemblyList)
         {
             string srcDllPath = $"{aotAssembliesSrcDir}/{dll}";
             if (!File.Exists(srcDllPath))
