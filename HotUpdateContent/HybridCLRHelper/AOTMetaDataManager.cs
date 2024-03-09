@@ -1,12 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using HybridCLR;
 using Debug = UnityEngine.Debug;
 
 public class AOTMetaDataManager
 {
+    public static IReadOnlyList<string> PatchedAOTAssemblyList
+    {
+        get
+        {
+            string className = "AOTGenericReferences";
+
+            Type type = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .FirstOrDefault(t => t.FullName == className);
+
+            string fieldName = "PatchedAOTAssemblyList";
+
+            FieldInfo fieldInfo = type.GetField(fieldName, BindingFlags.Public | BindingFlags.Static);
+
+            if (fieldInfo != null)
+            {
+                IReadOnlyList<string> patchedList = (IReadOnlyList<string>)fieldInfo.GetValue(null);
+
+                Console.WriteLine($"{fieldName} exists and has {patchedList.Count} items.");
+                return patchedList;
+            }
+            else
+            {
+                Console.WriteLine($"{fieldName} does not exist in {type.FullName}.");
+            }
+
+            return null;
+        }
+    }
+
     public static void Startup()
     {
         var timer = Stopwatch.StartNew();
@@ -29,7 +62,7 @@ public class AOTMetaDataManager
         HomologousImageMode mode = HomologousImageMode.SuperSet;
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("LoadMetadataForAOTAssembly");
-        foreach (var aotDllName in AOTGenericReferences.PatchedAOTAssemblyList)
+        foreach (var aotDllName in AOTMetaDataManager.PatchedAOTAssemblyList)
         {
             string asFilepath = Path.Combine(ApplicationConst.aot_load_dir_path, $"{aotDllName}.bytes");
 
