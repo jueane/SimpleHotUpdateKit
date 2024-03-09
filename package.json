@@ -1,10 +1,9 @@
 ﻿{
   "name": "com.jueane.simplehotupdatekit",
   "displayName": "SimpleHotUpdateKit",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "A simple and straightforward Unity Hot Update Kit",
   "dependencies": {
-    "com.unity.addressables": ""
   },
   "keywords": [
     "unity",
