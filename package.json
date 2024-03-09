@@ -1,10 +1,10 @@
 ﻿{
   "name": "com.jueane.simplehotupdatekit",
   "displayName": "SimpleHotUpdateKit",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A simple and straightforward Unity Hot Update Kit",
   "dependencies": {
-    "https://gitee.com/focus-creative-games/hybridclr_unity.git": "4.0.15"
+    "com.focus-creative-games.hybridclr_unity": "https://gitee.com/focus-creative-games/hybridclr_unity.git#v4.0.15"
   },
   "keywords": [
     "unity",
