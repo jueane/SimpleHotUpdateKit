@@ -1,0 +1,36 @@
+﻿{
+  "name": "com.jueane.simplehotupdatekit",
+  "displayName": "SimpleHotUpdateKit",
+  "version": "1.0.0",
+  "description": "A simple and straightforward Unity Hot Update Kit",
+  "keywords": [
+    "unity",
+    "package",
+    "hot-update",
+    "simple"
+  ],
+  "author": "jueane",
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jueane/SimpleHotUpdateKit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jueane/SimpleHotUpdateKit/issues"
+  },
+  "homepage": "https://github.com/jueane/SimpleHotUpdateKit",
+  "scripts": {
+    "prepublish": "npm ci && npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
