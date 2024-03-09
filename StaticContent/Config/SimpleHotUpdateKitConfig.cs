@@ -7,6 +7,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     [Header("Editor Build Settings")] public string BuildDirectory = "Build";
 
     public string FolderForUploadingData = "cdn_ready_content";
+    public bool upload = false;
 
     [Header("Update Settings")] public string updateServerURL = "http://yourupdateurl.com";
     public bool enableAutoUpdate = true;
