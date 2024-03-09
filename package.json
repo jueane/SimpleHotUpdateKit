@@ -3,6 +3,9 @@
   "displayName": "SimpleHotUpdateKit",
   "version": "1.0.4",
   "description": "A simple and straightforward Unity Hot Update Kit",
+  "dependencies": {
+    "com.unity.addressables": ""
+  },
   "keywords": [
     "unity",
     "package",
