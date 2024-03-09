@@ -1,7 +1,7 @@
 ﻿{
   "name": "com.jueane.simplehotupdatekit",
   "displayName": "SimpleHotUpdateKit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple and straightforward Unity Hot Update Kit",
   "keywords": [
     "unity",

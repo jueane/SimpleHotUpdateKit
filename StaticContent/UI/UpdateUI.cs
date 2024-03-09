@@ -1,12 +1,11 @@
 ﻿using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UpdateUI : MonoBehaviour
 {
-    public TextMeshProUGUI downloadStatus;
-    public TextMeshProUGUI downloadProgress;
+    public Text downloadStatus;
+    public Text downloadProgress;
 
     public Slider slider;
 
