@@ -4,7 +4,6 @@
   "version": "1.0.10",
   "description": "A simple and straightforward Unity Hot Update Kit",
   "dependencies": {
-    "com.focus-creative-games.hybridclr_unity": "https://gitee.com/focus-creative-games/hybridclr_unity.git#4.0.15"
   },
   "keywords": [
     "unity",
