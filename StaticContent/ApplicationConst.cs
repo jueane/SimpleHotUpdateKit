@@ -5,7 +5,7 @@ public static class ApplicationConst
 {
     public static SimpleHotUpdateKitConfig config => SimpleHotUpdateKitConfig.Instance;
 
-    public const string launcherAssemblyName = "Assembly-CSharp";
+    public static string launcherAssemblyName => config.InvokeAssembly;
 
     public static string ServerAddress => config.updateServerURL;
 
