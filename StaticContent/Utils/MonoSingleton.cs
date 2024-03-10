@@ -2,7 +2,7 @@
 
 namespace Common.Singleton
 {
-    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
+    public abstract class MonoSingletonSimple<T> : MonoBehaviour where T : MonoSingletonSimple<T>
     {
         private static T _instance;
 

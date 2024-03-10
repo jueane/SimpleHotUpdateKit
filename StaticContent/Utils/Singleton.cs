@@ -2,7 +2,7 @@
 
 namespace Common.Singleton
 {
-    public abstract class Singleton<T> where T : Singleton<T>
+    public abstract class SingletonSimple<T> where T : SingletonSimple<T>
     {
         protected static bool _isInitialized = false;
 

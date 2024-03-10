@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Common.Singleton;
 
-public class DownloadScheduler : MonoSingleton<DownloadScheduler>
+public class DownloadScheduler : MonoSingletonSimple <DownloadScheduler>
 {
     const int CONCURRENT = 3;
     const int MAX_RETRY_COUNT = 5;

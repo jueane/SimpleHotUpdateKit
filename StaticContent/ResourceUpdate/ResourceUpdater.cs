@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Common.Singleton;
 using UnityEngine;
 
-public class ResourceUpdater : MonoSingleton<ResourceUpdater>
+public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
 {
     public enum CheckUpdateStatus
     {
@@ -60,7 +60,7 @@ public class ResourceUpdater : MonoSingleton<ResourceUpdater>
             if (string.IsNullOrEmpty(curInfo))
                 continue;
 
-            var infoArray = curInfo.Split(ApplicationConst.SeparateSymbol);
+            var infoArray = curInfo.Split(ApplicationConst.SeparateSymbol.ToCharArray());
             var curUrl = infoArray[0];
             long.TryParse(infoArray[1], out var fileLen);
             long.TryParse(infoArray[2], out var crc);
