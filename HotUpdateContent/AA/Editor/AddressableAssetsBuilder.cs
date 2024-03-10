@@ -77,6 +77,7 @@ public static class AddressableAssetsBuilder
         if (!success)
         {
             Debug.LogError("Addressables build error encountered: " + result.Error);
+            throw new Exception();
         }
 
         return success;
