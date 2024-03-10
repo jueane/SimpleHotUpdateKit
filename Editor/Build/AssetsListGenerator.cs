@@ -62,7 +62,10 @@ public static class AssetsListGenerator
 
     static string GetRelativePath(string fullPath, string rootDirectory)
     {
-        var relativePath = Path.GetRelativePath(rootDirectory, fullPath);
-        return relativePath.Replace(Path.DirectorySeparatorChar, '/');
+        rootDirectory = Path.GetFullPath(rootDirectory) + Path.DirectorySeparatorChar;
+        fullPath = Path.GetFullPath(fullPath);
+
+        fullPath = fullPath.Replace(rootDirectory, null);
+        return fullPath.Replace(Path.DirectorySeparatorChar, '/');
     }
 }

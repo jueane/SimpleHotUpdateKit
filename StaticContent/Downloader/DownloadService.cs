@@ -106,7 +106,7 @@ namespace Downloader
         {
             CancelAsync();
             await Task.Yield(); // prevents a sync/hot thread hangup
-            if (_taskCompletion is not null)
+            if (_taskCompletion != null)
                 await _taskCompletion.Task;
         }
 
@@ -136,7 +136,7 @@ namespace Downloader
                 _bandwidth.Reset();
                 _requestInstance = null;
 
-                if (_taskCompletion is not null)
+                if (_taskCompletion != null)
                 {
                     if (_taskCompletion.Task.IsCompleted == false)
                         _taskCompletion.TrySetCanceled();
@@ -321,7 +321,7 @@ namespace Downloader
                 cancellationTokenSource.Token.ThrowIfCancellationRequested();
                 return await chunkDownloader.Download(_requestInstance, pause, cancellationTokenSource.Token).ConfigureAwait(false);
             }
-            catch (Exception exp) when (exp is not OperationCanceledException)
+            catch (Exception exp) when (!(exp is OperationCanceledException))
             {
                 lock (this)
                 {

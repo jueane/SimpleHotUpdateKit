@@ -12,7 +12,7 @@ namespace Downloader
 
         public static DownloadBuilder New()
         {
-            DownloadBuilder builder = new();
+            DownloadBuilder builder = new DownloadBuilder();
             return builder;
         }
 
@@ -87,7 +87,7 @@ namespace Downloader
 
         public DownloadBuilder Configure(Action<DownloadConfiguration> configure)
         {
-            DownloadConfiguration configuration = new();
+            DownloadConfiguration configuration = new DownloadConfiguration();
             configure(configuration);
             return WithConfiguration(configuration);
         }
