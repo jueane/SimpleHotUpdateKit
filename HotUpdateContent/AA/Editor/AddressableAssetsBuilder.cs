@@ -44,30 +44,30 @@ public static class AddressableAssetsBuilder
         Debug.Log($"File {AAResConst.aa_config_file} copied");
     }
 
-    public static string GetBuildPathForProfile(string profileName)
-    {
-        // 获取 Addressables 配置
-        AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
-
-        var p = settings.profileSettings.GetProfileDataById(AddressableAssetSettingsDefaultObject.Settings.activeProfileId);
-
-
-        // 获取所有 Profile 的名称
-        string[] allProfileNames = settings.profileSettings.GetAllProfileNames().ToArray();
-
-        // 查找匹配的 Profile
-        if (System.Array.Exists(allProfileNames, name => name == profileName))
-        {
-            // 获取 Build Path
-            string buildPath = settings.profileSettings.GetValueByName(profileName, "BuildPath");
-            return buildPath;
-        }
-        else
-        {
-            // 如果找不到匹配的 Profile，返回空字符串或者默认路径
-            return string.Empty;
-        }
-    }
+    // public static string GetBuildPathForProfile(string profileName)
+    // {
+    //     // 获取 Addressables 配置
+    //     AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
+    //
+    //     var p = settings.profileSettings.GetProfileDataById(AddressableAssetSettingsDefaultObject.Settings.activeProfileId);
+    //
+    //
+    //     // 获取所有 Profile 的名称
+    //     string[] allProfileNames = settings.profileSettings.GetAllProfileNames().ToArray();
+    //
+    //     // 查找匹配的 Profile
+    //     if (System.Array.Exists(allProfileNames, name => name == profileName))
+    //     {
+    //         // 获取 Build Path
+    //         string buildPath = settings.profileSettings.GetValueByName(profileName, "BuildPath");
+    //         return buildPath;
+    //     }
+    //     else
+    //     {
+    //         // 如果找不到匹配的 Profile，返回空字符串或者默认路径
+    //         return string.Empty;
+    //     }
+    // }
 
     public static bool buildAddressableContent()
     {
