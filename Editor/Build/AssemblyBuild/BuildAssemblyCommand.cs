@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using HybridCLR.Editor;
-using HybridCLR.Editor.Settings;
 using UnityEditor;
 using UnityEngine;
 
