@@ -6,6 +6,8 @@ public class DownloadTest4 : IDownloadExecutor
 {
     IDownload downloader;
 
+    long downloadedSize;
+
     public IEnumerator Download(string url, string savePath)
     {
         var downloadOpt = new DownloadConfiguration()
@@ -21,6 +23,8 @@ public class DownloadTest4 : IDownloadExecutor
             .WithConfiguration(downloadOpt)
             .Build();
 
+        // downloader.DownloadProgressChanged += DownloaderOnDownloadProgressChanged;
+
         var task = downloader.StartAsync();
 
         while (!task.IsCompleted)
@@ -32,6 +36,11 @@ public class DownloadTest4 : IDownloadExecutor
         {
             Debug.LogException(task.Exception);
         }
+    }
+
+    void DownloaderOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+    {
+        downloadedSize = e.ReceivedBytesSize;
     }
 
     public long GetDownloadedSize()

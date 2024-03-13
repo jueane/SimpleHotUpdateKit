@@ -28,7 +28,7 @@ public class UpdateUI : MonoBehaviour
             {
                 var size1 = ResourceUpdater.Instance.downloadBytes;
                 var size2 = ResourceUpdater.Instance.totalBytes;
-                downloadProgress.text = $"{FileSizeHelper.ReadableFileSize(size1)}/{FileSizeHelper.ReadableFileSize(size2)}";
+                downloadProgress.text = $"{size1.CalcMemoryMensurableUnit()}/{size2.CalcMemoryMensurableUnit()}";
                 if (size2 > 0)
                     slider.value = (float)size1 / size2;
             }

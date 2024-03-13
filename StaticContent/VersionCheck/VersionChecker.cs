@@ -24,7 +24,7 @@ public class VersionChecker
     {
         var dataPointerUrl = $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
 
-        yield return RemoteDataHelper.GetRemoteValue(dataPointerUrl, (checkSucceed, remoteValue) =>
+        yield return RemoteReader.GetRemoteValue(dataPointerUrl, (checkSucceed, remoteValue) =>
         {
             if (checkSucceed)
             {

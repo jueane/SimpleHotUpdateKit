@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SimpleHotUpdateKitConfig", menuName = "SimpleHotUpdateKitConfig/Config", order = 1)]
@@ -12,9 +13,10 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     [Header("Update Settings")] public string updateServerURL = "http://yourupdateurl.com";
     public bool enableAutoUpdate = true;
 
+    [Header("Preprocess")] public List<string> methodList;
+
     [Header("Launch Class")] public string InvokeAssembly = "Assembly-CSharp";
     public string InvokeClassName = "GameLogicLoader";
-    public string InvokeMethod = "Startup";
 
     [Header("Version Control")] public int currentVersion = 1;
 

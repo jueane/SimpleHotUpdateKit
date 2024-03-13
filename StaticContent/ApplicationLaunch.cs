@@ -51,12 +51,17 @@ public class ApplicationLaunch : MonoBehaviour
             yield return new WaitForSeconds(1f); // wait for show
         }
 
-        CallInitializationAssembly();
+        LoadLauncherAssembly();
 
-        LoadAssembly();
+        if (ApplicationConst.config.methodList != null)
+        {
+            foreach (var curMethod in ApplicationConst.config.methodList)
+            {
+                yield return CallInit(curMethod);
+            }
+        }
 
-        Debug.Log("Call hotfix assembly");
-        CallAssembly(launcherAssembly);
+        yield return CallInit($"{ApplicationConst.config.InvokeAssembly}.{ApplicationConst.config.InvokeClassName}");
     }
 
     void Update()
@@ -77,7 +82,7 @@ public class ApplicationLaunch : MonoBehaviour
         }
     }
 
-    public static void LoadAssembly()
+    static void LoadLauncherAssembly()
     {
 #if UNITY_EDITOR
         launcherAssembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(ApplicationConst.launcherAssemblyName));
@@ -108,31 +113,47 @@ public class ApplicationLaunch : MonoBehaviour
         }
     }
 
-    static void CallInitializationAssembly()
+    static Assembly GetInitializationAssembly(string assemblyName)
     {
-        var assembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals("Assembly-CSharp"));
-        if (assembly == null)
+        var InitializationAssembly = "Assembly-CSharp";
+        Assembly assembly = null;
+        if (InitializationAssembly != ApplicationConst.launcherAssemblyName)
         {
-            Debug.Log($"{assembly.FullName} is null");
-            return;
+            assembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(""));
+            if (assembly == null)
+            {
+                Debug.Log($"{assembly.FullName} is null");
+                return null;
+            }
+        }
+        else
+        {
+            assembly = launcherAssembly;
         }
 
-        Type entryType = assembly.GetType("SimpleHotUpdateKitInitializer");
-        MethodInfo method = entryType.GetMethod("Startup");
-        method.Invoke(null, null);
+        return assembly;
     }
 
-    static void CallAssembly(Assembly assembly)
+    static Assembly GetAssembly(string assemblyName)
     {
+        var assembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(assemblyName));
         if (assembly == null)
         {
             Debug.Log($"{assembly.FullName} is null");
-            return;
+            return null;
         }
 
-        Type entryType = assembly.GetType(ApplicationConst.config.InvokeClassName);
-        MethodInfo method = entryType.GetMethod(ApplicationConst.config.InvokeMethod);
-        method.Invoke(null, null);
-        Debug.Log($"Call method {method.DeclaringType.FullName}.");
+        return assembly;
+    }
+
+    static IEnumerator CallInit(string fullName)
+    {
+        var nameArray = fullName.Split('.');
+        if (nameArray.Length < 2)
+        {
+            throw new Exception($"error call {fullName}");
+        }
+
+        yield return GetAssembly(nameArray[0]).Initialize(nameArray[1]);
     }
 }

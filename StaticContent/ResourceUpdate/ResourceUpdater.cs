@@ -32,7 +32,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
         var listUrl = $"{bashUrl}/{ApplicationConst.ListFile}";
         Debug.Log($"[Remote] Read file list, {listUrl}");
         updateStatus = CheckUpdateStatus.Checking;
-        RemoteReader.Read(listUrl).ContinueWith(OnReadFileList, TaskScheduler.FromCurrentSynchronizationContext());
+        RemoteReader.GetRemoteValueList(listUrl, OnReadFileList);
 
         yield return new WaitUntil(() => (updateStatus == CheckUpdateStatus.Finished || updateStatus == CheckUpdateStatus.Updating));
 
@@ -48,14 +48,14 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
         VersionChecker.WriteVersionFile();
     }
 
-    void OnReadFileList(Task<List<string>> fileList)
+    void OnReadFileList(bool a, List<string> fileList)
     {
         totalBytes = 0;
 
         StringBuilder skipListLog = new StringBuilder();
         int skipCount = 0;
 
-        foreach (var curInfo in fileList.Result)
+        foreach (var curInfo in fileList)
         {
             if (string.IsNullOrEmpty(curInfo))
                 continue;
@@ -112,7 +112,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
                 strDownloadTable.Append($"{taskInfo.url}, save path: \n{taskInfo.savePath}");
             }
 
-            Debug.Log($"New download task: {FileSizeHelper.ReadableFileSize(totalBytes)}, {taskList.Count} URLs\n{strDownloadTable.ToString()}");
+            Debug.Log($"New download task: {totalBytes.CalcMemoryMensurableUnit()}, {taskList.Count} URLs\n{strDownloadTable.ToString()}");
         }
     }
 
@@ -127,7 +127,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
                 {
                     newSize += curDl.totalBytes;
                 }
-                else if (!curDl.downloadStarted)
+                else if (curDl.downloadStarted)
                 {
                     newSize += curDl.downloadBytes;
                 }

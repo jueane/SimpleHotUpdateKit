@@ -1,11 +1,16 @@
 ﻿using System;
-using System.Reflection;
+using System.Collections;
 
-public class SimpleHotUpdateKitInitializer
+public class SimpleHotUpdateKitInitializer : IAssemblyInitializer
 {
-    public static void Startup()
+    public IEnumerator Initialize()
     {
         if (ApplicationConst.config.enableAutoUpdate)
+        {
             AOTMetaDataManager.Startup();
+            AAResInitializer.InitConfig();
+        }
+
+        yield break;
     }
 }
