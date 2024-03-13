@@ -51,9 +51,9 @@ public class ApplicationLaunch : MonoBehaviour
             yield return new WaitForSeconds(1f); // wait for show
         }
 
-        LoadAssembly();
+        CallInitializationAssembly();
 
-        InitLauncherAssembly(launcherAssembly);
+        LoadAssembly();
 
         Debug.Log("Call hotfix assembly");
         CallAssembly(launcherAssembly);
@@ -108,8 +108,9 @@ public class ApplicationLaunch : MonoBehaviour
         }
     }
 
-    static void InitLauncherAssembly(Assembly assembly)
+    static void CallInitializationAssembly()
     {
+        var assembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals("Assembly-CSharp"));
         if (assembly == null)
         {
             Debug.Log($"{assembly.FullName} is null");
