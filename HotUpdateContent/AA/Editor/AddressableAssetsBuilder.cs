@@ -9,9 +9,9 @@ using UnityEngine.AddressableAssets;
 
 public static class AddressableAssetsBuilder
 {
-    public static void Build(string savePath)
+    public static void Build(string savePath, bool useCache)
     {
-        Debug.Log($" ---  Build resource to {savePath}");
+        Debug.Log($" ---  Build resource to {savePath}, use cache: {useCache}");
         // 获取项目目录的绝对路径
         string projectPath = Directory.GetParent(Application.dataPath).FullName;
 
@@ -20,10 +20,12 @@ public static class AddressableAssetsBuilder
         outputPath = Path.Combine(outputPath, AAResConst.aa_bundle_dir);
         FolderUtility.EnsurePathExists(outputPath);
 
-        AAResConst.AABuildPath = outputPath;
+        var tempPath = Path.Combine(projectPath, "Build_AA_Cache");
+        AAResConst.AABuildPath = tempPath;
+        if (!useCache)
+            buildAddressableContent();
+        FolderUtility.CopyDirectory(tempPath, outputPath);
         Debug.Log($"AA build path: {AAResConst.AABuildPath}");
-
-        buildAddressableContent();
 
         CopyAAConfig(savePath);
     }

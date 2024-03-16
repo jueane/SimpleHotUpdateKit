@@ -20,6 +20,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public string InvokeClassName = "GameLogicLoader";
 
     [Header("Version Control")] public int currentVersion = 1;
+    public string VersionCode;
 
     [Header("Other Configurations")] public bool debugMode = false;
 
@@ -64,5 +65,16 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
 
             return instance;
         }
+    }
+
+    public void Save()
+    {
+#if UNITY_EDITOR
+        Debug.Log($"保存 配置");
+        // 保存修改到磁盘上
+        EditorUtility.SetDirty(this);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh(); // 如果需要，刷新资源管理器
+#endif
     }
 }

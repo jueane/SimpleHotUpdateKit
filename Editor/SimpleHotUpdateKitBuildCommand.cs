@@ -7,16 +7,16 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-public class SimpleHotUpdateKitBuildCommand
+public static class SimpleHotUpdateKitBuildCommand
 {
-    public static async Task<bool> Build(bool isFullPackage, bool includeResource = true)
+    public static async Task<bool> Build(bool isFullPackage, bool includeResource, bool useCache)
     {
         var versionChecked = await VersionChecker.Fetch(100);
         Debug.Log($"Remote version info: {VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}");
 
         if (versionChecked)
         {
-            if (!VersionChecker.FetchedRemoteValue)
+            if (!VersionChecker.Fetched)
             {
                 throw new Exception("VersionChecker error");
             }
@@ -28,7 +28,8 @@ public class SimpleHotUpdateKitBuildCommand
 
             CleanUploadFolder();
             FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingData);
-            FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataRes);
+            if (includeResource)
+                FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataRes);
             FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataNoCache);
 
             if (HybridCLRSettings.Instance.enable)
@@ -56,7 +57,7 @@ public class SimpleHotUpdateKitBuildCommand
             if (includeResource)
             {
                 versionInfo.resourceVersion = BuildConst.BuildVersion;
-                AddressableAssetsBuilder.Build(BuildConst.FullPathForUploadingDataRes);
+                AddressableAssetsBuilder.Build(BuildConst.FullPathForUploadingDataRes, useCache);
             }
 
             AssetsListGenerator.SaveFileList(includeResource);

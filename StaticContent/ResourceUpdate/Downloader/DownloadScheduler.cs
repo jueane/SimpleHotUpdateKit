@@ -6,10 +6,10 @@ using System.IO;
 using System.Threading.Tasks;
 using Common.Singleton;
 
-public class DownloadScheduler : MonoSingletonSimple <DownloadScheduler>
+public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 {
     const int CONCURRENT = 3;
-    const int MAX_RETRY_COUNT = 5;
+    const int MAX_RETRY_COUNT = int.MaxValue;
 
     private Queue<DownloadJob> downloadWaitingQueue = new Queue<DownloadJob>();
     private List<DownloadJob> downloadingList = new List<DownloadJob>();
@@ -52,7 +52,8 @@ public class DownloadScheduler : MonoSingletonSimple <DownloadScheduler>
                 curDl.downloadDetailInfo.downloadBytes = curDl.downloadDetailInfo.totalBytes;
                 var progressDesc = $"{downloadFinishedQueue.Count}/{downloadingList.Count + downloadWaitingQueue.Count + downloadFinishedQueue.Count}";
                 var skippedDesc = curDl.downloadDetailInfo.skipped ? $"[Skipped]" : null;
-                Debug.Log($"Download progress: {progressDesc} {skippedDesc}, {curDl.downloadDetailInfo.savePath}");
+                var sizeDesc = curDl.downloadDetailInfo.totalBytes.CalcMemoryMensurableUnit();
+                Debug.Log($"Download progress: {progressDesc} {skippedDesc} [{sizeDesc}], {curDl.downloadDetailInfo.savePath}");
             }
         }
 
@@ -92,15 +93,17 @@ public class DownloadScheduler : MonoSingletonSimple <DownloadScheduler>
         {
             var task = ChecksumAsync(info.savePath, info.checksum);
             // yield return task;
-            yield return new WaitUntil(() => task.IsCompleted);
+            yield return task.AsCoroutine();
             info.checksumPassed = task.Result;
-            File.WriteAllText(info.ChecksumFilePath, info.checksum.ToString());
+            if (info.checksumPassed)
+                File.WriteAllText(info.ChecksumFilePath, info.checksum.ToString());
         }
 
         if (!info.checksumPassed)
         {
             if (info.retryCount < MAX_RETRY_COUNT)
             {
+                yield return new WaitForSeconds(3);
                 Debug.Log($"Download failed, saved:{saved}, checksum check passed:{info.checksumPassed}, retry {url}");
                 info.retryCount++;
                 StartCoroutine(Download(job));

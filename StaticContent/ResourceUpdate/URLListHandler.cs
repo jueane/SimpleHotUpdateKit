@@ -15,9 +15,9 @@ public class URLListHandler
 
     public void OnReadFileList(bool a, List<string> fileList)
     {
-        Debug.Log($"Parsing {ListFileUrl}");
         // StringBuilder skipListLog = new StringBuilder();
         int skipCount = 0;
+        Debug.Log($"Parsed {fileList.Count} from {ListFileUrl}");
 
         foreach (var curInfo in fileList)
         {

@@ -13,13 +13,14 @@ public static class VersionChecker
 
     public static string LocalResVersion { get; private set; }
 
-    public static bool FetchedRemoteValue { get; private set; }
+    public static bool Fetched { get; private set; }
+    static string FetchedValue;
 
     public static bool isNewest { get; private set; }
 
     public static IEnumerator Init()
     {
-        LocalVersion = LoadLocalVersion();
+        LoadLocalVersion();
         var retryCount = ApplicationConst.config.forceUpdate ? int.MaxValue : 3;
         yield return Fetch(retryCount).AsCoroutine();
     }
@@ -28,13 +29,13 @@ public static class VersionChecker
     {
         var dataPointerUrl = $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
         await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback, retryCount);
-        return FetchedRemoteValue;
+        return Fetched;
     }
 
     static void VersionFetchCallback(bool checkSucceed, string remoteValue)
     {
-        FetchedRemoteValue = remoteValue != null;
-        if (checkSucceed && FetchedRemoteValue)
+        Fetched = remoteValue != null;
+        if (checkSucceed && Fetched)
         {
             VersionInfo remoteVersionInfo = null;
             try
@@ -47,16 +48,19 @@ public static class VersionChecker
                 return;
             }
 
+            FetchedValue = remoteValue;
             var remoteVer = remoteVersionInfo.codeVersion;
-            if (LocalVersion == remoteVer)
+            var remoteResVer = remoteVersionInfo.resourceVersion;
+            if (LocalVersion == remoteVer && LocalResVersion == remoteResVer)
             {
+                Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}]");
                 isNewest = true;
             }
             else
             {
-                Debug.Log($"New version found {LocalVersion} -> {remoteVer}");
+                Debug.Log($"New version found {LocalVersion},{LocalResVersion} -> {remoteVer},{remoteResVer}");
                 LocalVersion = remoteVer;
-                LocalResVersion = remoteVersionInfo.resourceVersion;
+                LocalResVersion = remoteResVer;
             }
         }
         else
@@ -70,14 +74,30 @@ public static class VersionChecker
         LocalVersion = newVer;
     }
 
-    static string LoadLocalVersion()
+    static void LoadLocalVersion()
     {
-        return File.Exists(VersionFilepath) ? File.ReadAllText(VersionFilepath) : null;
+        if (!File.Exists(VersionFilepath))
+        {
+            Debug.Log($"VersionFilepath not exist");
+            return;
+        }
+
+        try
+        {
+            var json = File.ReadAllText(VersionFilepath);
+            var verInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
+            LocalVersion = verInfo.codeVersion;
+            LocalResVersion = verInfo.resourceVersion;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Local version is invalid");
+        }
     }
 
     public static void WriteVersionFile()
     {
-        File.WriteAllText(VersionFilepath, LocalVersion);
+        File.WriteAllText(VersionFilepath, FetchedValue);
     }
 
     public static bool IsLastDownloadFinished()

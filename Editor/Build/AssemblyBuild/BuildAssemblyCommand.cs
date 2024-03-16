@@ -95,7 +95,7 @@ public static class BuildAssemblyCommand
 
             string dllBytesPath = $"{aotAssembliesDstDir}/{dll}.bytes";
             File.Copy(srcDllPath, dllBytesPath, true);
-            Debug.Log($"[CopyAOTAssembliesToStreamingAssets] copy AOT dll {srcDllPath} -> {dllBytesPath}");
+            // Debug.Log($"[CopyAOTAssembliesToStreamingAssets] copy AOT dll {srcDllPath} -> {dllBytesPath}");
         }
 
         AssetDatabase.Refresh();
