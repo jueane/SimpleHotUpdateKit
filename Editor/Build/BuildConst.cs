@@ -13,6 +13,7 @@ public static class BuildConst
     public static string BuildVersion;
 
     public static string FullPathForUploadingData => Path.Combine(FolderForUploadingData, ApplicationConst.CacheRelativePath, BuildVersion);
+    public static string FullPathForUploadingDataRes => Path.Combine(FolderForUploadingData, ApplicationConst.CacheRelativePath, BuildVersion + ApplicationConst.config.ResourceFolderSuffix);
     public static string FullPathForUploadingDataNoCache => Path.Combine(FolderForUploadingData, ApplicationConst.NoCacheRelativePath);
 
     // 构建过程中补充元数据的DLL保存目录

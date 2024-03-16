@@ -22,6 +22,7 @@ public static class ApplicationConst
     public static string BaseRemoteURLNoCache;
 
     public static string BaseRemoteURL;
+    public static string BaseRemoteURL_RESOURCE;
 
     public static string ListFile => config.ListFile;
     public static string SeparateSymbol => config.SeparateSymbol;
@@ -48,9 +49,11 @@ public static class ApplicationConst
 
     public static void RefreshValues()
     {
+        Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
         NoCacheRelativePath = $"{NoCacheDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CacheRelativePath = $"{CacheDir}_{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         BaseRemoteURLNoCache = $"{ServerAddress}/{NoCacheRelativePath}";
         BaseRemoteURL = $"{ServerAddress}/{CacheRelativePath}/{VersionChecker.LocalVersion}";
+        BaseRemoteURL_RESOURCE = $"{BaseRemoteURL}{config.ResourceFolderSuffix}";
     }
 }

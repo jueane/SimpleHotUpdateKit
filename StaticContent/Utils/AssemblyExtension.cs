@@ -10,7 +10,6 @@ public static class AssemblyExtension
         if (assembly == null)
         {
             throw new Exception($"{assembly.FullName} is null");
-            return;
         }
 
         Type entryType = assembly.GetType(className);
@@ -28,7 +27,6 @@ public static class AssemblyExtension
         if (assembly == null)
         {
             throw new Exception($"{assembly.FullName} is null");
-            yield break;
         }
 
         Type entryType = assembly.GetType(className);

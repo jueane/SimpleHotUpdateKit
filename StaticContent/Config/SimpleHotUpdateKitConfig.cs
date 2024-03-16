@@ -12,6 +12,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
 
     [Header("Update Settings")] public string updateServerURL = "http://yourupdateurl.com";
     public bool enableAutoUpdate = true;
+    public bool forceUpdate;
 
     [Header("Preprocess")] public List<string> methodList;
 
@@ -26,6 +27,8 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public string NoCacheDir = "nocache";
     public string MainBranch = "default";
     public string BuildBranch = "Development";
+
+    public string ResourceFolderSuffix = "Res";
 
     public string ListFile = "downloadlist.txt";
     public string SeparateSymbol = ",";

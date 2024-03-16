@@ -4,9 +4,7 @@ public static class NetworkUtil
 {
     private static bool? _hasInternetConnection;
 
-    public static readonly bool HasInternetConnectionCached = _hasInternetConnection ??= CheckHasInternetConnection();
-
-    public static bool HasInternetConnection => CheckHasInternetConnection();
+    public static bool HasInternetConnectionCached => _hasInternetConnection ??= CheckHasInternetConnection();
 
     public static bool CheckHasInternetConnection(bool showLog = true)
     {

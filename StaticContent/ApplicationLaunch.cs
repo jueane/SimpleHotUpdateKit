@@ -16,39 +16,32 @@ public class ApplicationLaunch : MonoBehaviour
 
     IEnumerator Start()
     {
-        // 强制联网
-        while (true)
-        {
-            Debug.Log($"Version init");
-            yield return VersionChecker.Init();
-            if (VersionChecker.FetchedRemoteValue)
-            {
-                ApplicationConst.RefreshValues();
-                break;
-            }
+        Debug.Log($"{nameof(ApplicationLaunch)}");
+        SkipUpdate = !ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished();
+        Debug.Log($"Skip update: {SkipUpdate}");
 
-            Debug.Log($"Please check network connection.");
-            yield return wfs;
-        }
-
-        SkipUpdate = !NetworkUtil.HasInternetConnection && VersionChecker.IsLastDownloadFinished();
-
-        if (VersionChecker.isNewest)
+        if (SkipUpdate)
         {
-            Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.LocalVersion}]");
-        }
-        else if (SkipUpdate)
-        {
-            Debug.Log($"No internet, assembly update skipped");
+            Debug.Log($"No internet, update skipped");
         }
         else
         {
-            yield return new WaitUntil(() => hasNetwork);
+            Debug.Log($"Version init");
 
-            Debug.Log($"Updating all files");
-            yield return ResourceUpdater.Instance.UpdateAll();
+            yield return VersionChecker.Init();
+            ApplicationConst.RefreshValues();
 
-            yield return new WaitForSeconds(1f); // wait for show
+            if (VersionChecker.isNewest)
+            {
+                Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.LocalVersion}]");
+            }
+            else
+            {
+                Debug.Log($"Updating all files");
+                yield return ResourceUpdater.Instance.UpdateAll();
+
+                yield return new WaitForSeconds(1f); // wait for show
+            }
         }
 
         LoadLauncherAssembly();
@@ -62,24 +55,6 @@ public class ApplicationLaunch : MonoBehaviour
         }
 
         yield return CallInit($"{ApplicationConst.config.InvokeAssembly}.{ApplicationConst.config.InvokeClassName}");
-    }
-
-    void Update()
-    {
-        RefreshNetworkStatus();
-    }
-
-    float checkNetworkCooldown;
-    bool hasNetwork;
-
-    void RefreshNetworkStatus()
-    {
-        checkNetworkCooldown -= Time.deltaTime;
-        if (checkNetworkCooldown < 0)
-        {
-            checkNetworkCooldown = 1;
-            hasNetwork = NetworkUtil.CheckHasInternetConnection(false);
-        }
     }
 
     static void LoadLauncherAssembly()
@@ -111,27 +86,6 @@ public class ApplicationLaunch : MonoBehaviour
                 Debug.LogError(ex);
             }
         }
-    }
-
-    static Assembly GetInitializationAssembly(string assemblyName)
-    {
-        var InitializationAssembly = "Assembly-CSharp";
-        Assembly assembly = null;
-        if (InitializationAssembly != ApplicationConst.launcherAssemblyName)
-        {
-            assembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(""));
-            if (assembly == null)
-            {
-                Debug.Log($"{assembly.FullName} is null");
-                return null;
-            }
-        }
-        else
-        {
-            assembly = launcherAssembly;
-        }
-
-        return assembly;
     }
 
     static Assembly GetAssembly(string assemblyName)

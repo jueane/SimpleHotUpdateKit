@@ -6,19 +6,33 @@ using UnityEngine;
 
 public static class AssetsListGenerator
 {
-    public static void SaveFileList()
+    public static void SaveFileList(bool includeResource)
     {
-        // 指定目录路径
-        string rootDirectory = Path.Combine(BuildConst.ProjectPath, BuildConst.FullPathForUploadingData);
+        {
+            // 指定目录路径
+            string rootDirectory = Path.Combine(BuildConst.ProjectPath, BuildConst.FullPathForUploadingData);
 
-        // 生成相对路径列表
-        string result = GenerateRelativePaths(rootDirectory);
+            // 生成相对路径列表
+            string result = GenerateRelativePaths(rootDirectory);
 
-        // 打印结果
-        Debug.Log(result);
+            var savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingData}/{ApplicationConst.ListFile}";
+            File.WriteAllText(savePath, result);
+            // 打印结果
+            Debug.Log(result);
+        }
+        if (includeResource)
+        {
+            // 指定目录路径
+            string rootDirectory = Path.Combine(BuildConst.ProjectPath, BuildConst.FullPathForUploadingDataRes);
 
-        var savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingData}/{ApplicationConst.ListFile}";
-        File.WriteAllText(savePath, result);
+            // 生成相对路径列表
+            string result = GenerateRelativePaths(rootDirectory);
+
+            var savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingDataRes}/{ApplicationConst.ListFile}";
+            File.WriteAllText(savePath, result);
+            // 打印结果
+            Debug.Log(result);
+        }
     }
 
     static string GenerateRelativePaths(string rootDirectory)

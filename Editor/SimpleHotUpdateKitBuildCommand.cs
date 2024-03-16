@@ -1,73 +1,72 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using HybridCLR.Editor.Commands;
 using HybridCLR.Editor.Settings;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
 public class SimpleHotUpdateKitBuildCommand
 {
-    public static void BuildFull()
+    public static async Task<bool> Build(bool isFullPackage, bool includeResource = true)
     {
-        BuildConst.GenerateBuildVersion();
-        CheckURLs();
+        var versionChecked = await VersionChecker.Fetch(100);
+        Debug.Log($"Remote version info: {VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}");
 
-        Debug.Log($"HybridCLR enabled: {HybridCLRSettings.Instance.enable}");
-
-        // if (!runInCmd)
-        //     AddVersion();
-
-        CleanUploadFolder();
-        FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingData);
-        FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataNoCache);
-
-        // SetBuildSettingScene();
-
-        Debug.Log("Build Resources");
-        AddressableAssetsBuilder.Build(BuildConst.FullPathForUploadingData);
-
-        if (HybridCLRSettings.Instance.enable)
+        if (versionChecked)
         {
-            PrebuildCommand.GenerateAll();
-            CompileDllCommand.CompileDllActiveBuildTarget();
+            if (!VersionChecker.FetchedRemoteValue)
+            {
+                throw new Exception("VersionChecker error");
+            }
 
-            BuildAssemblyCommand.CopyHotAssemblyToStreamingAssets();
-            BuildAssemblyCommand.CopyMetaDataToUploadFolder();
+            BuildConst.GenerateBuildVersion();
+            CheckURLs();
 
-            BuildAssemblyCommand.PrepareData();
+            Debug.Log($"HybridCLR enabled: {HybridCLRSettings.Instance.enable}");
+
+            CleanUploadFolder();
+            FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingData);
+            FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataRes);
+            FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataNoCache);
+
+            if (HybridCLRSettings.Instance.enable)
+            {
+                if (isFullPackage)
+                    PrebuildCommand.GenerateAll();
+
+                CompileDllCommand.CompileDllActiveBuildTarget();
+
+                if (isFullPackage)
+                    BuildAssemblyCommand.CopyHotAssemblyToStreamingAssets();
+
+                BuildAssemblyCommand.CopyMetaDataToUploadFolder();
+
+                BuildAssemblyCommand.PrepareData();
+            }
+
+            var versionInfo = new VersionInfo()
+            {
+                codeVersion = BuildConst.BuildVersion,
+                resourceVersion = VersionChecker.LocalResVersion,
+            };
+
+            Debug.Log($"Build Resources: {includeResource}");
+            if (includeResource)
+            {
+                versionInfo.resourceVersion = BuildConst.BuildVersion;
+                AddressableAssetsBuilder.Build(BuildConst.FullPathForUploadingDataRes);
+            }
+
+            AssetsListGenerator.SaveFileList(includeResource);
+
+            var verJson = JsonConvert.SerializeObject(versionInfo);
+            File.WriteAllText($"{BuildConst.FullPathForUploadingDataNoCache}/{ApplicationConst.DataPointerFile}", verJson);
+            return true;
         }
 
-        AssetsListGenerator.SaveFileList();
-        File.WriteAllText($"{BuildConst.FullPathForUploadingDataNoCache}/{ApplicationConst.DataPointerFile}", BuildConst.BuildVersion);
-    }
-
-    public static void BuildUpdate()
-    {
-        BuildConst.GenerateBuildVersion();
-        CheckURLs();
-
-        // if (!runInCmd)
-        //     AddVersion();
-
-        CleanUploadFolder();
-        FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingData);
-        FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataNoCache);
-
-        Debug.Log("Build Resources");
-        AddressableAssetsBuilder.Build(BuildConst.FullPathForUploadingData);
-
-        // 程序集
-        if (HybridCLRSettings.Instance.enable)
-        {
-            CompileDllCommand.CompileDllActiveBuildTarget();
-            BuildAssemblyCommand.CopyMetaDataToUploadFolder();
-            BuildAssemblyCommand.PrepareData();
-        }
-
-        AssetsListGenerator.SaveFileList();
-        File.WriteAllText($"{BuildConst.FullPathForUploadingDataNoCache}/{ApplicationConst.DataPointerFile}", BuildConst.BuildVersion);
-
-        Debug.Log($"Build version: {BuildConst.BuildVersion}");
+        return false;
     }
 
     public static void CheckURLs()

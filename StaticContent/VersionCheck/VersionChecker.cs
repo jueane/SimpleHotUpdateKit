@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-using Main.Utils;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 
-public class VersionChecker
+public static class VersionChecker
 {
     public static string VersionFilepath => $"{Application.persistentDataPath}/{ApplicationConst.DataPointerFile}";
 
     public static string LocalVersion { get; private set; }
+
+    public static string LocalResVersion { get; private set; }
 
     public static bool FetchedRemoteValue { get; private set; }
 
@@ -17,33 +20,49 @@ public class VersionChecker
     public static IEnumerator Init()
     {
         LocalVersion = LoadLocalVersion();
-        yield return GetBuildVersion();
+        var retryCount = ApplicationConst.config.forceUpdate ? int.MaxValue : 3;
+        yield return Fetch(retryCount).AsCoroutine();
     }
 
-    static IEnumerator GetBuildVersion()
+    public static async Task<bool> Fetch(int retryCount)
     {
         var dataPointerUrl = $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
+        await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback, retryCount);
+        return FetchedRemoteValue;
+    }
 
-        yield return RemoteReader.GetRemoteValue(dataPointerUrl, (checkSucceed, remoteValue) =>
+    static void VersionFetchCallback(bool checkSucceed, string remoteValue)
+    {
+        FetchedRemoteValue = remoteValue != null;
+        if (checkSucceed && FetchedRemoteValue)
         {
-            if (checkSucceed)
+            VersionInfo remoteVersionInfo = null;
+            try
             {
-                FetchedRemoteValue = remoteValue != null;
-                if (LocalVersion == remoteValue)
-                {
-                    isNewest = true;
-                }
-                else
-                {
-                    Debug.Log($"New version found {LocalVersion} -> {remoteValue}");
-                    LocalVersion = remoteValue;
-                }
+                remoteVersionInfo = JsonConvert.DeserializeObject<VersionInfo>(remoteValue);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return;
+            }
+
+            var remoteVer = remoteVersionInfo.codeVersion;
+            if (LocalVersion == remoteVer)
+            {
+                isNewest = true;
             }
             else
             {
-                Debug.Log($"Get version failed");
+                Debug.Log($"New version found {LocalVersion} -> {remoteVer}");
+                LocalVersion = remoteVer;
+                LocalResVersion = remoteVersionInfo.resourceVersion;
             }
-        });
+        }
+        else
+        {
+            Debug.Log($"Get version failed, FetchedRemoteValue: {remoteValue}");
+        }
     }
 
     public static void ForceSetInEditor(String newVer)
