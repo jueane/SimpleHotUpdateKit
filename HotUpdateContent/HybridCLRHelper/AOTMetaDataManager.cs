@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using HybridCLR;
 using Debug = UnityEngine.Debug;
@@ -29,7 +31,9 @@ public class AOTMetaDataManager
         HomologousImageMode mode = HomologousImageMode.SuperSet;
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("LoadMetadataForAOTAssembly");
-        foreach (var aotDllName in AOTGenericReferences.PatchedAOTAssemblyList)
+
+        // foreach (var aotDllName in AOTGenericReferences.PatchedAOTAssemblyList)
+        foreach (var aotDllName in GetAotList())
         {
             string asFilepath = Path.Combine(ApplicationConst.aot_load_dir_path, $"{aotDllName}.bytes");
 
@@ -47,5 +51,41 @@ public class AOTMetaDataManager
         }
 
         Debug.Log(sb.ToString());
+    }
+
+    public static IReadOnlyList<string> GetAotList()
+    {
+        // 加载目标程序集
+        Assembly targetAssembly = ApplicationLaunch.GetAssembly("Assembly-CSharp");
+        // 获取类型
+        Type targetType = targetAssembly.GetType("AOTGenericReferences");
+
+        if (targetType != null)
+        {
+            // 获取字段
+            FieldInfo field = targetType.GetField("PatchedAOTAssemblyList", BindingFlags.Public | BindingFlags.Static);
+
+            if (field != null)
+            {
+                // 获取字段值
+                IReadOnlyList<string> assemblyList = (IReadOnlyList<string>)field.GetValue(null);
+
+                return assemblyList;
+                // 打印字段值
+                // foreach (string assemblyName in assemblyList)
+                // {
+                //     Debug.Log(assemblyName);
+                // }
+            }
+            else
+            {
+                Debug.LogError("字段未找到");
+            }
+        }
+        else
+        {
+            Debug.LogError("类型未找到");
+        }
+        return null;
     }
 }

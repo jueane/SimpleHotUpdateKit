@@ -89,7 +89,7 @@ public class ApplicationLaunch : MonoBehaviour
         }
     }
 
-    static Assembly GetAssembly(string assemblyName)
+    public static Assembly GetAssembly(string assemblyName)
     {
         var assembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(assemblyName));
         if (assembly == null)

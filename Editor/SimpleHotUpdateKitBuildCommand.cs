@@ -74,6 +74,12 @@ public static class SimpleHotUpdateKitBuildCommand
 
         ApplicationConst.config.VersionCode = null;
         ApplicationConst.config.Save();
+
+
+        if (SimpleHotUpdateKitConfig.Instance.upload)
+        {
+            DataServerProxy.Instance.DataServer.Upload("cdn_ready_content/*", $"/root/webapps/MySite/webroot/download/{Application.productName.ToLower()}", false);
+        }
     }
 
     public static void CheckURLs()
