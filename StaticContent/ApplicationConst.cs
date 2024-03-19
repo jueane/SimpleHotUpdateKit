@@ -9,6 +9,8 @@ public static class ApplicationConst
 
     public static string ServerAddress => config.updateServerURL;
 
+    public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.LoadRootDirectory);
+
     public static string CacheDir => config.CacheDir;
     public static string NoCacheDir => config.NoCacheDir;
 
@@ -30,17 +32,15 @@ public static class ApplicationConst
     // 程序集 on cdn
     public static string AssemblyFolder => config.AssemblyFolder;
 
-    public static string AssetRootDirectory => config.AssetRootDirectory;
-
     // 版本信息
     public static string DataPointerFile => config.DataPointerFile;
 
     public static bool PackageMode;
 
     // 补充元数据的DLL目录
-    public static string AOT_Dll_Dir => config.AOT_Dll_Dir;
+    public static string AOT_Dll_Dir => config.AdditionDlls;
 
-    public static string aot_load_dir_path => Path.Combine(Application.persistentDataPath, AOT_Dll_Dir);
+    public static string aot_load_dir_path => Path.Combine(ApplicationConst.LoadRootPath, AOT_Dll_Dir);
 
     static ApplicationConst()
     {

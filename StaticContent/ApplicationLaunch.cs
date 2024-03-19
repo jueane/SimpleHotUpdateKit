@@ -65,7 +65,7 @@ public class ApplicationLaunch : MonoBehaviour
         return;
 #endif
 
-        string targetDirectory = Path.Combine(Application.persistentDataPath, ApplicationConst.AssemblyFolder);
+        string targetDirectory = Path.Combine(ApplicationConst.LoadRootPath, ApplicationConst.AssemblyFolder);
         var files = DirectoryHelper.GetFilesWithoutExtension(targetDirectory, ".bytes");
 
         foreach (var assemblyName in files)

@@ -8,7 +8,7 @@ namespace Main.AssemblyLoading
     {
         public static bool LoadBytes(string filename, out byte[] bytes)
         {
-            var filePath = Path.Combine(Application.persistentDataPath, ApplicationConst.AssemblyFolder, $"{filename}");
+            var filePath = Path.Combine(ApplicationConst.LoadRootPath, ApplicationConst.AssemblyFolder, $"{filename}");
             if (File.Exists(filePath))
             {
                 bytes = File.ReadAllBytes(filePath);

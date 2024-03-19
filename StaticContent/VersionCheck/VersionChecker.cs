@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class VersionChecker
 {
-    public static string VersionFilepath => $"{Application.persistentDataPath}/{ApplicationConst.DataPointerFile}";
+    public static string VersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
 
     public static string LocalVersion { get; private set; }
 

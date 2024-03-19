@@ -30,7 +30,7 @@ public class URLListHandler
             long.TryParse(infoArray[2], out var crc);
 
             var fileUrl = $"{baseUrl}/{curUrl}";
-            var savePath = Path.Combine(Application.persistentDataPath, curUrl);
+            var savePath = Path.Combine(ApplicationConst.LoadRootPath, curUrl);
 
             var newTask = new DownloadDetailInfo()
             {

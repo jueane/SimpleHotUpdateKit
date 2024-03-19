@@ -22,14 +22,17 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     [Header("Version Control")] public int currentVersion = 1;
     public string VersionCode;
 
-    [Header("Other Configurations")] public bool debugMode = false;
+    public bool debugMode = false;
 
+    [Header("Branch Configurations")]
     public string CacheDir = "cache";
     public string NoCacheDir = "nocache";
     public string MainBranch = "default";
-    public string BuildBranch = "Development";
+    public string BuildBranch = "development";
 
-    public string ResourceFolderSuffix = "Res";
+    [Header("Directory Configurations")]
+    public string LoadRootDirectory = "download_cache";
+    public string ResourceFolderSuffix = "res";
 
     public string ListFile = "downloadlist.txt";
     public string SeparateSymbol = ",";
@@ -37,13 +40,11 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     // 程序集 on cdn
     public string AssemblyFolder = "assembly_files";
 
-    public string AssetRootDirectory = "assetspackage";
-
     // 版本信息
     public string DataPointerFile = "data_version";
 
     // 补充元数据的DLL目录
-    public string AOT_Dll_Dir = "aot_dlls";
+    public string AdditionDlls = "addition_dlls";
 
     const string configLoadPath = "SimpleHotUpdateKitConfig/SimpleHotUpdateKitConfig";
     private static string configPath = $"Assets/Resources/{configLoadPath}";
