@@ -8,6 +8,8 @@ public class DownloadTest4 : IDownloadExecutor
 
     long downloadedSize;
 
+    double downloadSpeed;
+
     public IEnumerator Download(string url, string savePath)
     {
         var downloadOpt = new DownloadConfiguration()
@@ -23,7 +25,7 @@ public class DownloadTest4 : IDownloadExecutor
             .WithConfiguration(downloadOpt)
             .Build();
 
-        // downloader.DownloadProgressChanged += DownloaderOnDownloadProgressChanged;
+        downloader.DownloadProgressChanged += DownloaderOnDownloadProgressChanged;
 
         var task = downloader.StartAsync();
 
@@ -41,10 +43,16 @@ public class DownloadTest4 : IDownloadExecutor
     void DownloaderOnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
     {
         downloadedSize = e.ReceivedBytesSize;
+        downloadSpeed = e.BytesPerSecondSpeed;
     }
 
     public long GetDownloadedSize()
     {
-        return downloader?.DownloadedFileSize ?? 0;
+        return downloadedSize;
+    }
+
+    public double GetDownloadedSpeed()
+    {
+        return downloadSpeed;
     }
 }

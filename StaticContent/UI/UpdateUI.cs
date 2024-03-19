@@ -6,6 +6,7 @@ public class UpdateUI : MonoBehaviour
 {
     public Text downloadStatus;
     public Text downloadProgress;
+    public Text downloadSpeed;
 
     public Slider slider;
 
@@ -31,6 +32,7 @@ public class UpdateUI : MonoBehaviour
                 downloadProgress.text = $"{size1.CalcMemoryMensurableUnit()}/{size2.CalcMemoryMensurableUnit()}";
                 if (size2 > 0)
                     slider.value = (float)size1 / size2;
+                downloadSpeed.text = $"{ResourceUpdater.Instance.downloadSpeed.CalcMemoryMensurableUnit()}/s";
             }
         }
 

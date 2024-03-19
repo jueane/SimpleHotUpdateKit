@@ -8,7 +8,7 @@ using Common.Singleton;
 
 public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 {
-    const int CONCURRENT = 3;
+    const int CONCURRENT = 5;
     const int MAX_RETRY_COUNT = int.MaxValue;
 
     private Queue<DownloadJob> downloadWaitingQueue = new Queue<DownloadJob>();
@@ -40,6 +40,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         foreach (var curDownloading in downloadingList)
         {
             curDownloading.downloadDetailInfo.downloadBytes = curDownloading.downloader.GetDownloadedSize();
+            curDownloading.downloadDetailInfo.downloadSpeed = curDownloading.downloader.GetDownloadedSpeed();
         }
 
         for (int i = downloadingList.Count - 1; i >= 0; i--)

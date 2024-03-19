@@ -47,4 +47,9 @@ public class DownloadTest1 : IDownloadExecutor
     {
         return downloadHandler?.data.Length ?? 0;
     }
+
+    public double GetDownloadedSpeed()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -14,6 +14,8 @@ public class DownloadDetailInfo
 
     public long totalBytes;
 
+    public double downloadSpeed;
+
     public bool downloadStarted;
 
     public bool skipped;
