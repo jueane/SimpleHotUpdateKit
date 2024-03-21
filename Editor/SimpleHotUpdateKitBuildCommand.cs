@@ -10,7 +10,7 @@ using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static IEnumerator Build(bool isFullPackage, bool includeResource, bool useCache)
+    public static IEnumerator Build(bool isFullPackage, bool includeResource, bool useCache, Action<string> buildResourceFunc)
     {
         Debug.Log($"Get remote version info");
         yield return VersionChecker.Fetch(100).AsCoroutine();
@@ -64,7 +64,7 @@ public static class SimpleHotUpdateKitBuildCommand
         if (includeResource)
         {
             versionInfo.resourceVersion = BuildConst.BuildVersion;
-            AddressableAssetsBuilder.Build(BuildConst.FullPathForUploadingDataRes, useCache);
+            buildResourceFunc?.Invoke(BuildConst.FullPathForUploadingDataRes);
         }
 
         AssetsListGenerator.SaveFileList(includeResource);
