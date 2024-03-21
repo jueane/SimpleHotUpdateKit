@@ -10,7 +10,7 @@ using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static IEnumerator Build(bool isFullPackage, bool includeResource, bool useCache, Action<string> buildResourceFunc)
+    public static IEnumerator Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
     {
         Debug.Log($"Get remote version info");
         yield return VersionChecker.Fetch(100).AsCoroutine();
@@ -74,12 +74,6 @@ public static class SimpleHotUpdateKitBuildCommand
 
         ApplicationConst.config.VersionCode = null;
         ApplicationConst.config.Save();
-
-
-        if (SimpleHotUpdateKitConfig.Instance.upload)
-        {
-            DataServerProxy.Instance.DataServer.Upload("cdn_ready_content/*", $"/root/webapps/MySite/webroot/download/{Application.productName.ToLower()}", false);
-        }
     }
 
     public static void CheckURLs()

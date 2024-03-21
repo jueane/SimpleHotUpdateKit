@@ -1,0 +1,20 @@
+{
+    "name": "SimpleHotUpdateKit.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2035ae536e07bec4c974662526ce72aa",
+        "GUID:2373f786d14518f44b0f475db77ba4de",
+        "GUID:478a2357cc57436488a56e564b08d223"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
