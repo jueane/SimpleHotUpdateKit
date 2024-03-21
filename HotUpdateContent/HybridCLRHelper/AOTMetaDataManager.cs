@@ -71,11 +71,6 @@ public class AOTMetaDataManager
                 IReadOnlyList<string> assemblyList = (IReadOnlyList<string>)field.GetValue(null);
 
                 return assemblyList;
-                // 打印字段值
-                // foreach (string assemblyName in assemblyList)
-                // {
-                //     Debug.Log(assemblyName);
-                // }
             }
             else
             {
