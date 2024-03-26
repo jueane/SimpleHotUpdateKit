@@ -41,12 +41,13 @@ public class ApplicationLaunch : MonoBehaviour
                 Debug.Log($"Updating all files");
                 yield return ResourceUpdater.Instance.UpdateAll();
 
-                AOTMetaDataManager.Startup();
                 yield return new WaitForSeconds(1f); // wait for show
             }
         }
 
         LoadLauncherAssembly();
+
+        AOTMetaDataManager.Startup();
 
         if (ApplicationConst.config.methodList != null)
         {

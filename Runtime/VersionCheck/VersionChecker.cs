@@ -9,6 +9,7 @@ public static class VersionChecker
 {
     public static string VersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
 
+    public static string dataPointerUrl => $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
     public static string LocalVersion { get; private set; }
 
     public static string LocalResVersion { get; private set; }
@@ -27,9 +28,14 @@ public static class VersionChecker
 
     public static async Task<bool> Fetch(int retryCount)
     {
-        var dataPointerUrl = $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
         await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback, retryCount);
         return Fetched;
+    }
+
+    public static void FetchSync()
+    {
+        var rValue = RemoteReader.GetRemoteValue(dataPointerUrl);
+        VersionFetchCallback(true, rValue);
     }
 
     static void VersionFetchCallback(bool checkSucceed, string remoteValue)
@@ -44,7 +50,7 @@ public static class VersionChecker
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Debug.LogError(e);
                 return;
             }
 

@@ -1,24 +1,26 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
 using HybridCLR.Editor.Commands;
 using HybridCLR.Editor.Settings;
 using Newtonsoft.Json;
-using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static IEnumerator Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
+    public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
     {
-        Debug.Log($"Get remote version info");
-        yield return VersionChecker.Fetch(100).AsCoroutine();
-        Debug.Log($"Remote version info: {VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}");
-
-        if (!VersionChecker.Fetched)
+        Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}");
+        if (!isFullPackage)
         {
-            throw new Exception("VersionChecker error");
+            Debug.Log($"Get remote version info");
+            VersionChecker.FetchSync();
+            Debug.Log($"Remote version info: {VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}");
+
+            if (!VersionChecker.Fetched)
+            {
+                throw new Exception("VersionChecker error");
+            }
         }
 
         BuildConst.GenerateBuildVersion();
@@ -26,8 +28,6 @@ public static class SimpleHotUpdateKitBuildCommand
 
         ApplicationConst.config.VersionCode = BuildConst.BuildVersion;
         ApplicationConst.config.Save();
-
-        yield return new EditorWaitForSeconds(1);
 
         Debug.Log($"HybridCLR enabled: {HybridCLRSettings.Instance.enable}");
 
@@ -52,8 +52,6 @@ public static class SimpleHotUpdateKitBuildCommand
             BuildAssemblyCommand.PrepareData();
         }
 
-        yield return new EditorWaitForSeconds(1);
-
         var versionInfo = new VersionInfo()
         {
             codeVersion = BuildConst.BuildVersion,
@@ -71,9 +69,6 @@ public static class SimpleHotUpdateKitBuildCommand
 
         var verJson = JsonConvert.SerializeObject(versionInfo);
         File.WriteAllText($"{BuildConst.FullPathForUploadingDataNoCache}/{ApplicationConst.DataPointerFile}", verJson);
-
-        ApplicationConst.config.VersionCode = null;
-        ApplicationConst.config.Save();
     }
 
     public static void CheckURLs()

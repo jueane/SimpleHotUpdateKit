@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -7,6 +8,24 @@ using UnityEngine.Networking;
 
 public static class RemoteReader
 {
+    public static string GetRemoteValue(string url)
+    {
+        string result = null;
+        using (WebClient client = new WebClient())
+        {
+            try
+            {
+                result = client.DownloadString(url); // 发送HTTP请求并获取响应内容
+            }
+            catch (WebException e)
+            {
+                Debug.LogError("Failed to fetch remote file content: " + e.Message);
+            }
+        }
+
+        return result;
+    }
+
     public static async Task GetRemoteValue(string url, Action<bool, string> callback, int retryCount = int.MaxValue, bool failed = false)
     {
         retryCount--;
