@@ -32,7 +32,6 @@ public class AOTMetaDataManager
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("LoadMetadataForAOTAssembly");
 
-        // foreach (var aotDllName in AOTGenericReferences.PatchedAOTAssemblyList)
         foreach (var aotDllName in GetAotList())
         {
             string asFilepath = Path.Combine(ApplicationConst.aot_load_dir_path, $"{aotDllName}.bytes");
