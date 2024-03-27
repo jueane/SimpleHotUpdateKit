@@ -11,14 +11,7 @@
     "simple"
   ],
   "author": "jueane",
-  "main": "dist/index.js",
-  "module": "dist/index.module.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE"
-  ],
+  "type": "library",
   "license": "MIT",
   "repository": {
     "type": "git",
