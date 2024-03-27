@@ -79,7 +79,7 @@ public static class SimpleHotUpdateKitBuildCommand
         }
     }
 
-    [MenuItem("Build/CheckURLs")]
+    // [MenuItem("Build/CheckURLs")]
     public static void CheckURLsManual()
     {
         BuildConst.GenerateBuildVersion();
