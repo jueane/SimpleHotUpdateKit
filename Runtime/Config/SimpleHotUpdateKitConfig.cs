@@ -6,7 +6,7 @@ using UnityEngine;
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
     [Header("Editor Build Settings")] public string BuildDirectory = "Build";
-
+    public bool buildResource = false;
     public string FolderForUploadingData = "cdn_ready_content";
     public bool upload = false;
 
@@ -24,14 +24,12 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
 
     public bool debugMode = false;
 
-    [Header("Branch Configurations")]
-    public string CacheDir = "cache";
+    [Header("Branch Configurations")] public string CacheDir = "cache";
     public string NoCacheDir = "nocache";
     public string MainBranch = "default";
     public string BuildBranch = "development";
 
-    [Header("Directory Configurations")]
-    public string LoadRootDirectory = "download_cache";
+    [Header("Directory Configurations")] public string LoadRootDirectory = "download_cache";
     public string ResourceFolderSuffix = "res";
 
     public string ListFile = "downloadlist.txt";
