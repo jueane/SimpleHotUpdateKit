@@ -69,7 +69,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public void Save()
     {
 #if UNITY_EDITOR
-        Debug.Log($"保存 配置");
+        Debug.Log($"Save config");
         // 保存修改到磁盘上
         EditorUtility.SetDirty(this);
         AssetDatabase.SaveAssets();

@@ -73,12 +73,12 @@ public class AOTMetaDataManager
             }
             else
             {
-                Debug.LogError("字段未找到");
+                Debug.LogError("Field not found");
             }
         }
         else
         {
-            Debug.LogError("类型未找到");
+            Debug.LogError("Type not found");
         }
         return null;
     }
