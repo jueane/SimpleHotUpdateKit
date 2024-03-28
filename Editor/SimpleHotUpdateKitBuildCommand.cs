@@ -8,9 +8,10 @@ using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
+    public static void Build(bool isFullPackage, Action<string> buildResourceFunc)
     {
-        Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}");
+        var includeResource = ApplicationConst.config.buildResource;
+        Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}, includeResource: {includeResource}");
         if (!isFullPackage)
         {
             Debug.Log($"Get remote version info");
