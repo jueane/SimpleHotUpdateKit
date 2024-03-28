@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using HybridCLR.Editor;
 using HybridCLR.Editor.Settings;
@@ -84,7 +85,7 @@ public static class BuildAssemblyCommand
         string aotAssembliesDstDir = BuildConst.aot_save_dir_path;
         FolderUtility.EnsurePathExists(aotAssembliesDstDir);
 
-        foreach (var dll in AOTMetaDataManager.GetAotList())
+        foreach (var dll in GetAotList())
         {
             string srcDllPath = $"{aotAssembliesSrcDir}/{dll}";
             if (!File.Exists(srcDllPath))
@@ -92,12 +93,37 @@ public static class BuildAssemblyCommand
                 Debug.LogError($"ab中添加AOT补充元数据dll:{srcDllPath} 时发生错误,文件不存在。裁剪后的AOT dll在BuildPlayer时才能生成，因此需要你先构建一次游戏App后再打包。");
                 continue;
             }
-        
+
             string dllBytesPath = $"{aotAssembliesDstDir}/{dll}.bytes";
             File.Copy(srcDllPath, dllBytesPath, true);
             // Debug.Log($"[CopyAOTAssembliesToStreamingAssets] copy AOT dll {srcDllPath} -> {dllBytesPath}");
         }
 
         AssetDatabase.Refresh();
+    }
+
+    static IReadOnlyList<string> GetAotList()
+    {
+        var filePath = Path.Combine(Application.dataPath, "HybridCLRGenerate", "AOTGenericReferences.cs");
+        Debug.Log($"Aot file: {filePath}");
+        if (!File.Exists(filePath))
+        {
+            throw new Exception($"File not exist {filePath}");
+        }
+
+        var lineList = File.ReadAllLines(filePath);
+
+        List<string> newList = new List<string>();
+        foreach (var line in lineList)
+        {
+            if (line.Contains(".dll"))
+            {
+                var newLine = line.Trim().Trim(',').Trim('\"');
+                Debug.Log($"dll: {newLine}");
+                newList.Add(newLine);
+            }
+        }
+
+        return newList;
     }
 }
