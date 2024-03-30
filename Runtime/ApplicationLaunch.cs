@@ -27,8 +27,7 @@ public class ApplicationLaunch : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Version init");
-
+            Debug.Log($"Version init, {VersionChecker.dataPointerUrl}");
             yield return VersionChecker.Init();
             ApplicationConst.RefreshValues();
 
