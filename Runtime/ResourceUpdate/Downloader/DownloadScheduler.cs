@@ -11,11 +11,11 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
     const int CONCURRENT = 5;
     const int MAX_RETRY_COUNT = int.MaxValue;
 
-    private Queue<DownloadJob> downloadWaitingQueue = new Queue<DownloadJob>();
+    private Queue<DownloadJob> waitingQueue = new Queue<DownloadJob>();
     private List<DownloadJob> downloadingList = new List<DownloadJob>();
-    private Queue<DownloadJob> downloadFinishedQueue = new Queue<DownloadJob>();
+    private Queue<DownloadJob> finishedQueue = new Queue<DownloadJob>();
 
-    bool NoRemainingTask => downloadFinishedQueue.Count == (downloadingList.Count + downloadWaitingQueue.Count + downloadFinishedQueue.Count);
+    bool NoRemainingTask => finishedQueue.Count == (downloadingList.Count + waitingQueue.Count + finishedQueue.Count);
 
     public bool IsAllDownloadFinished { get; private set; }
 
@@ -32,7 +32,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         };
 
         IsAllDownloadFinished = false;
-        downloadWaitingQueue.Enqueue(newDownload);
+        waitingQueue.Enqueue(newDownload);
     }
 
     void Update()
@@ -49,18 +49,18 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             if (curDl.downloadDetailInfo.checksumPassed)
             {
                 downloadingList.RemoveAt(i);
-                downloadFinishedQueue.Enqueue(curDl);
+                finishedQueue.Enqueue(curDl);
                 curDl.downloadDetailInfo.downloadBytes = curDl.downloadDetailInfo.totalBytes;
-                var progressDesc = $"{downloadFinishedQueue.Count}/{downloadingList.Count + downloadWaitingQueue.Count + downloadFinishedQueue.Count}";
+                var progressDesc = $"{finishedQueue.Count}/{downloadingList.Count + waitingQueue.Count + finishedQueue.Count}";
                 var skippedDesc = curDl.downloadDetailInfo.skipped ? $"[Skipped]" : null;
                 var sizeDesc = curDl.downloadDetailInfo.totalBytes.CalcMemoryMensurableUnit();
                 Debug.Log($"Download progress: {progressDesc} {skippedDesc} [{sizeDesc}], {curDl.downloadDetailInfo.savePath}");
             }
         }
 
-        while (downloadWaitingQueue.Count > 0 && downloadingList.Count < CONCURRENT)
+        while (waitingQueue.Count > 0 && downloadingList.Count < CONCURRENT)
         {
-            var curDl = downloadWaitingQueue.Dequeue();
+            var curDl = waitingQueue.Dequeue();
             downloadingList.Add(curDl);
             StartCoroutine(Download(curDl));
         }
@@ -68,9 +68,9 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         if (!IsAllDownloadFinished && NoRemainingTask)
         {
             IsAllDownloadFinished = true;
-            downloadWaitingQueue.Clear();
+            waitingQueue.Clear();
             downloadingList.Clear();
-            downloadFinishedQueue.Clear();
+            finishedQueue.Clear();
         }
     }
 
