@@ -52,4 +52,9 @@ public class DownloadTest1 : IDownloadExecutor
     {
         throw new NotImplementedException();
     }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
 }

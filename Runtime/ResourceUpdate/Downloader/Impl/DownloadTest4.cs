@@ -55,4 +55,9 @@ public class DownloadTest4 : IDownloadExecutor
     {
         return downloadSpeed;
     }
+
+    public void Dispose()
+    {
+        downloader.Dispose();
+    }
 }

@@ -20,6 +20,8 @@ public class DownloadDetailInfo
 
     public bool skipped;
 
+    public bool saved;
+
     public bool checksumPassed;
 
     public int retryCount;
@@ -36,5 +38,14 @@ public class DownloadDetailInfo
         }
 
         return false;
+    }
+
+    public void Reset()
+    {
+        downloadBytes = 0;
+        downloadSpeed = 0;
+        downloadStarted = false;
+        saved = false;
+        checksumPassed = false;
     }
 }

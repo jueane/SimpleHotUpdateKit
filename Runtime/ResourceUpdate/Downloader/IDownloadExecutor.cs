@@ -7,4 +7,6 @@ public interface IDownloadExecutor
     long GetDownloadedSize();
 
     double GetDownloadedSpeed();
+
+    void Dispose();
 }

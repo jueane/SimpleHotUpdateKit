@@ -13,9 +13,10 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 
     private Queue<DownloadJob> waitingQueue = new Queue<DownloadJob>();
     private List<DownloadJob> downloadingList = new List<DownloadJob>();
+    private List<DownloadJob> savedList = new List<DownloadJob>();
     private Queue<DownloadJob> finishedQueue = new Queue<DownloadJob>();
 
-    bool NoRemainingTask => finishedQueue.Count == (downloadingList.Count + waitingQueue.Count + finishedQueue.Count);
+    bool NoRemainingTask => finishedQueue.Count == (waitingQueue.Count + downloadingList.Count + savedList.Count + finishedQueue.Count);
 
     public bool IsAllDownloadFinished { get; private set; }
 
@@ -25,14 +26,19 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 
     public void Add(DownloadDetailInfo downloadDetailInfo)
     {
-        var newDownload = new DownloadJob
+        var newJob = new DownloadJob
         {
             downloadDetailInfo = downloadDetailInfo,
             downloader = new DownloadTest4(),
         };
 
+        StartJob(newJob);
+    }
+
+    void StartJob(DownloadJob job)
+    {
         IsAllDownloadFinished = false;
-        waitingQueue.Enqueue(newDownload);
+        waitingQueue.Enqueue(job);
     }
 
     void Update()
@@ -41,21 +47,6 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         {
             curDownloading.downloadDetailInfo.downloadBytes = curDownloading.downloader.GetDownloadedSize();
             curDownloading.downloadDetailInfo.downloadSpeed = curDownloading.downloader.GetDownloadedSpeed();
-        }
-
-        for (int i = downloadingList.Count - 1; i >= 0; i--)
-        {
-            var curDl = downloadingList[i];
-            if (curDl.downloadDetailInfo.checksumPassed)
-            {
-                downloadingList.RemoveAt(i);
-                finishedQueue.Enqueue(curDl);
-                curDl.downloadDetailInfo.downloadBytes = curDl.downloadDetailInfo.totalBytes;
-                var progressDesc = $"{finishedQueue.Count}/{downloadingList.Count + waitingQueue.Count + finishedQueue.Count}";
-                var skippedDesc = curDl.downloadDetailInfo.skipped ? $"[Skipped]" : null;
-                var sizeDesc = curDl.downloadDetailInfo.totalBytes.CalcMemoryMensurableUnit();
-                Debug.Log($"Download progress: {progressDesc} {skippedDesc} [{sizeDesc}], {curDl.downloadDetailInfo.savePath}");
-            }
         }
 
         while (waitingQueue.Count > 0 && downloadingList.Count < CONCURRENT)
@@ -92,22 +83,38 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         var saved = File.Exists(savePath);
         if (saved)
         {
+            info.saved = true;
+
+            downloadingList.Remove(job);
+            savedList.Add(job);
+
             var task = ChecksumAsync(info.savePath, info.checksum);
-            // yield return task;
             yield return task.AsCoroutine();
             info.checksumPassed = task.Result;
             if (info.checksumPassed)
                 File.WriteAllText(info.ChecksumFilePath, info.checksum.ToString());
         }
 
-        if (!info.checksumPassed)
+        savedList.Remove(job);
+
+        if (info.checksumPassed)
+        {
+            finishedQueue.Enqueue(job);
+            info.downloadBytes = info.totalBytes;
+            var progressDesc = $"{finishedQueue.Count}/{downloadingList.Count + waitingQueue.Count + finishedQueue.Count}";
+            var skippedDesc = info.skipped ? $"[Skipped]" : null;
+            var sizeDesc = info.totalBytes.CalcMemoryMensurableUnit();
+            Debug.Log($"Download progress: {progressDesc} {skippedDesc} [{sizeDesc}], {info.savePath}");
+        }
+        else
         {
             if (info.retryCount < MAX_RETRY_COUNT)
             {
                 yield return new WaitForSeconds(3);
                 Debug.Log($"Download failed, saved:{saved}, checksum check passed:{info.checksumPassed}, retry {url}");
                 info.retryCount++;
-                StartCoroutine(Download(job));
+                job.Reset();
+                StartJob(job);
             }
             else
             {
