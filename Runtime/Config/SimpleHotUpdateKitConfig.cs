@@ -9,6 +9,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public bool buildResource = false;
     public string FolderForUploadingData = "cdn_ready_content";
     public bool upload = false;
+    public string aotListFilePath;
 
     [Header("Update Settings")] public string updateServerURL = "http://yourupdateurl.com";
     public bool enableAutoUpdate = true;

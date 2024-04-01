@@ -104,7 +104,7 @@ public static class BuildAssemblyCommand
 
     static IReadOnlyList<string> GetAotList()
     {
-        var filePath = Path.Combine(Application.dataPath, "HybridCLRGenerate", "AOTGenericReferences.cs");
+        var filePath = Path.Combine(Application.dataPath, ApplicationConst.config.aotListFilePath);
         Debug.Log($"Aot file: {filePath}");
         if (!File.Exists(filePath))
         {
