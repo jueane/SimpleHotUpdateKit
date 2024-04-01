@@ -6,8 +6,7 @@ public class UnityStreamingAssetLoader
     public static bool LoadBytes(string filename, out byte[] bytes)
     {
         bytes = null;
-        var asFilepath = "";
-        asFilepath = Path.Combine(Application.streamingAssetsPath, $"{filename}");
+        var asFilepath = Path.Combine(Application.streamingAssetsPath, $"{filename}");
 
         Debug.Log($"Path: {asFilepath}");
 

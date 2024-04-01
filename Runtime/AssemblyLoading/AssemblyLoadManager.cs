@@ -1,28 +1,52 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
-namespace Main.AssemblyLoading
+public static class AssemblyLoadManager
 {
-    public class AssemblyLoadManager
+    public static void LoadAllAssembly()
     {
-        public static bool LoadBytes(string filename, out byte[] bytes)
+        var asList = VersionChecker.versionInfo.hotUpdateAssemblyList;
+        foreach (var assemblyName in asList)
         {
-            var filePath = Path.Combine(ApplicationConst.LoadRootPath, ApplicationConst.AssemblyFolder, $"{filename}");
-            if (File.Exists(filePath))
-            {
-                bytes = File.ReadAllBytes(filePath);
-                Debug.Log($"Load {filename} from application persistentDataPath data");
-                return true;
-            }
+            Debug.Log($"load assembly {assemblyName}");
 
-            if (UnityStreamingAssetLoader.LoadBytes(filename, out bytes))
-            {
-                Debug.Log($"Load {filename} from application streaming data");
-                return true;
-            }
+#if UNITY_EDITOR
+            AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(assemblyName));
+            continue;
+#endif
 
-            throw new Exception($"Error: {filename} not found");
+            LoadBytes($"{assemblyName}.bytes", out var loadBytes);
+            try
+            {
+                Assembly ass = Assembly.Load(loadBytes);
+                Debug.Log($"Assembly {assemblyName} loaded");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex);
+            }
         }
+    }
+
+    public static bool LoadBytes(string filename, out byte[] bytes)
+    {
+        var filePath = Path.Combine(ApplicationConst.LoadRootPath, ApplicationConst.AssemblyFolder, $"{filename}");
+        if (File.Exists(filePath))
+        {
+            bytes = File.ReadAllBytes(filePath);
+            Debug.Log($"Load {filename} from application persistentDataPath data");
+            return true;
+        }
+
+        if (UnityStreamingAssetLoader.LoadBytes(filename, out bytes))
+        {
+            Debug.Log($"Load {filename} from application streaming data");
+            return true;
+        }
+
+        throw new Exception($"Error: {filename} not found");
     }
 }

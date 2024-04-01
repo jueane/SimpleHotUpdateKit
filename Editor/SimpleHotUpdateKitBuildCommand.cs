@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using HybridCLR.Editor.Commands;
 using HybridCLR.Editor.Settings;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ public static class SimpleHotUpdateKitBuildCommand
         {
             Debug.Log($"Get remote version info");
             VersionChecker.FetchSync();
-            Debug.Log($"Remote version info: {VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}");
+            Debug.Log($"Remote version info: {VersionChecker.versionInfo.codeVersion},{VersionChecker.versionInfo.resourceVersion}");
 
             if (!VersionChecker.Fetched)
             {
@@ -38,6 +39,15 @@ public static class SimpleHotUpdateKitBuildCommand
             FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataRes);
         FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataNoCache);
 
+        var versionInfo = new VersionInfo()
+        {
+            codeVersion = BuildConst.BuildVersion,
+            resourceVersion = VersionChecker.versionInfo.resourceVersion,
+        };
+
+        versionInfo.hotUpdateAssemblyList = HybridCLRSettings.Instance.hotUpdateAssemblies.ToList();
+        versionInfo.preprocessMethodList = ApplicationConst.config.methodList;
+
         if (HybridCLRSettings.Instance.enable)
         {
             if (isFullPackage)
@@ -52,12 +62,6 @@ public static class SimpleHotUpdateKitBuildCommand
 
             BuildAssemblyCommand.PrepareData();
         }
-
-        var versionInfo = new VersionInfo()
-        {
-            codeVersion = BuildConst.BuildVersion,
-            resourceVersion = VersionChecker.LocalResVersion,
-        };
 
         Debug.Log($"Build Resources: {includeResource}");
         if (includeResource)

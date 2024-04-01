@@ -10,9 +10,8 @@ public static class VersionChecker
     public static string VersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
 
     public static string dataPointerUrl => $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
-    public static string LocalVersion { get; private set; }
 
-    public static string LocalResVersion { get; private set; }
+    public static VersionInfo versionInfo = new VersionInfo();
 
     public static bool Fetched { get; private set; }
     static string FetchedValue;
@@ -57,16 +56,15 @@ public static class VersionChecker
             FetchedValue = remoteValue;
             var remoteVer = remoteVersionInfo.codeVersion;
             var remoteResVer = remoteVersionInfo.resourceVersion;
-            if (LocalVersion == remoteVer && LocalResVersion == remoteResVer)
+            if (versionInfo.codeVersion == remoteVer && versionInfo.resourceVersion == remoteResVer)
             {
-                Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}]");
+                Debug.Log($"System up-to-date, no updates needed. [{versionInfo.codeVersion},{versionInfo.resourceVersion}]");
                 isNewest = true;
             }
             else
             {
-                Debug.Log($"New version found {LocalVersion},{LocalResVersion} -> {remoteVer},{remoteResVer}");
-                LocalVersion = remoteVer;
-                LocalResVersion = remoteResVer;
+                Debug.Log($"New version found {versionInfo.codeVersion},{versionInfo.resourceVersion} -> {remoteVer},{remoteResVer}");
+                versionInfo = remoteVersionInfo;
             }
         }
         else
@@ -77,7 +75,10 @@ public static class VersionChecker
 
     public static void ForceSetInEditor(String newVer)
     {
-        LocalVersion = newVer;
+        versionInfo = new VersionInfo()
+        {
+            codeVersion = newVer
+        };
     }
 
     static void LoadLocalVersion()
@@ -91,9 +92,7 @@ public static class VersionChecker
         try
         {
             var json = File.ReadAllText(VersionFilepath);
-            var verInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
-            LocalVersion = verInfo.codeVersion;
-            LocalResVersion = verInfo.resourceVersion;
+            versionInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
         }
         catch (Exception e)
         {

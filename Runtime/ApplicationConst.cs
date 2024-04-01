@@ -5,8 +5,6 @@ public static class ApplicationConst
 {
     public static SimpleHotUpdateKitConfig config => SimpleHotUpdateKitConfig.Instance;
 
-    public static string launcherAssemblyName => config.InvokeAssembly;
-
     public static string ServerAddress => config.updateServerURL;
 
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.LoadRootDirectory);
@@ -54,7 +52,7 @@ public static class ApplicationConst
         CacheRelativePath = $"{CacheDir}_{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         BaseRemoteURLNoCache = $"{ServerAddress}/{NoCacheRelativePath}";
         var cachedDir = $"{ServerAddress}/{CacheRelativePath}";
-        BaseRemoteURL = $"{cachedDir}/{VersionChecker.LocalVersion}";
-        BaseRemoteURL_RESOURCE = $"{cachedDir}/{VersionChecker.LocalResVersion}{config.ResourceFolderSuffix}";
+        BaseRemoteURL = $"{cachedDir}/{VersionChecker.versionInfo.codeVersion}";
+        BaseRemoteURL_RESOURCE = $"{cachedDir}/{VersionChecker.versionInfo.resourceVersion}{config.ResourceFolderSuffix}";
     }
 }

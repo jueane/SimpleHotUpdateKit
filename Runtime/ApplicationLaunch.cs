@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using Main.AssemblyLoading;
 using UnityEngine;
 
 public class ApplicationLaunch : MonoBehaviour
@@ -33,7 +31,7 @@ public class ApplicationLaunch : MonoBehaviour
 
             if (VersionChecker.isNewest)
             {
-                Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.LocalVersion},{VersionChecker.LocalResVersion}]");
+                Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.versionInfo.codeVersion},{VersionChecker.versionInfo.resourceVersion}]");
             }
             else
             {
@@ -44,48 +42,15 @@ public class ApplicationLaunch : MonoBehaviour
             }
         }
 
-        LoadLauncherAssembly();
+        AssemblyLoadManager.LoadAllAssembly();
 
         AOTMetaDataManager.Startup();
 
-        if (ApplicationConst.config.methodList != null)
+        if (VersionChecker.versionInfo.preprocessMethodList != null)
         {
-            foreach (var curMethod in ApplicationConst.config.methodList)
+            foreach (var curMethod in VersionChecker.versionInfo.preprocessMethodList)
             {
                 yield return CallInit(curMethod);
-            }
-        }
-
-        yield return CallInit($"{ApplicationConst.config.InvokeAssembly}.{ApplicationConst.config.InvokeClassName}");
-    }
-
-    static void LoadLauncherAssembly()
-    {
-#if UNITY_EDITOR
-        launcherAssembly = AppDomain.CurrentDomain.GetAssemblies().First(curAssembly => curAssembly.GetName().Name.Equals(ApplicationConst.launcherAssemblyName));
-        return;
-#endif
-
-        string targetDirectory = Path.Combine(ApplicationConst.LoadRootPath, ApplicationConst.AssemblyFolder);
-        var files = DirectoryHelper.GetFilesWithoutExtension(targetDirectory, ".bytes");
-
-        foreach (var assemblyName in files)
-        {
-            Debug.Log($"load assembly {assemblyName}");
-            AssemblyLoadManager.LoadBytes($"{assemblyName}.bytes", out var loadBytes);
-            try
-            {
-                Assembly ass = Assembly.Load(loadBytes);
-                Debug.Log($"Assembly {assemblyName} loaded");
-
-                if (assemblyName.Contains(ApplicationConst.launcherAssemblyName))
-                {
-                    launcherAssembly = ass;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex);
             }
         }
     }
