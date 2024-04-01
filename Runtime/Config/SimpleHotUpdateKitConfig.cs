@@ -20,7 +20,6 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public string InvokeClassName = "GameLogicLoader";
 
     [Header("Version Control")] public int currentVersion = 1;
-    public string VersionCode;
 
     public bool debugMode = false;
 

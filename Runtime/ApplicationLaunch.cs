@@ -14,7 +14,7 @@ public class ApplicationLaunch : MonoBehaviour
 
     IEnumerator Start()
     {
-        Debug.Log($"Build version: {ApplicationConst.config.VersionCode}");
+        Debug.Log($"Build version: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
         Debug.Log($"{nameof(ApplicationLaunch)}");
         SkipUpdate = !ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished();
         Debug.Log($"Skip update: {SkipUpdate}");

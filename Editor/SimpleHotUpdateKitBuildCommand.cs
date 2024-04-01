@@ -28,8 +28,8 @@ public static class SimpleHotUpdateKitBuildCommand
         BuildConst.GenerateBuildVersion();
         CheckURLs();
 
-        ApplicationConst.config.VersionCode = BuildConst.BuildVersion;
-        ApplicationConst.config.Save();
+        ApplicationConst.IdentifyCodeConfig.VersionCode = BuildConst.BuildVersion;
+        ApplicationConst.IdentifyCodeConfig.Save();
 
         Debug.Log($"HybridCLR enabled: {HybridCLRSettings.Instance.enable}");
 

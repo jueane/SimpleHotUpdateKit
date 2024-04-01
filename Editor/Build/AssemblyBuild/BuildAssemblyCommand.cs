@@ -36,7 +36,7 @@ public static class BuildAssemblyCommand
     {
         string projectPath = Directory.GetParent(Application.dataPath).ToString();
         var asPath = Path.Combine(projectPath, $"HybridCLRData/HotUpdateDlls/{EditorUserBuildSettings.activeBuildTarget}");
-        string outputPath = Path.Combine(Application.streamingAssetsPath);
+        string outputPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.AssemblyFolder);
         FolderUtility.EnsurePathExists(outputPath);
 
         foreach (var curAsName in asList)

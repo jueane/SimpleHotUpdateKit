@@ -4,6 +4,7 @@ using UnityEngine;
 public static class ApplicationConst
 {
     public static SimpleHotUpdateKitConfig config => SimpleHotUpdateKitConfig.Instance;
+    public static SimpleHotUpdateKitIdentifyCode IdentifyCodeConfig => SimpleHotUpdateKitIdentifyCode.Instance;
 
     public static string ServerAddress => config.updateServerURL;
 

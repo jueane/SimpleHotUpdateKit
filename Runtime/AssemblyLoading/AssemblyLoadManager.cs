@@ -41,7 +41,7 @@ public static class AssemblyLoadManager
             return true;
         }
 
-        if (UnityStreamingAssetLoader.LoadBytes(filename, out bytes))
+        if (UnityStreamingAssetLoader.LoadBytes(Path.Combine(ApplicationConst.AssemblyFolder, filename), out bytes))
         {
             Debug.Log($"Load {filename} from application streaming data");
             return true;
