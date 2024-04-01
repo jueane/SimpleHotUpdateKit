@@ -8,7 +8,7 @@ public static class AssemblyLoadManager
 {
     public static void LoadAllAssembly()
     {
-        var asList = VersionChecker.versionInfo.hotUpdateAssemblyList;
+        var asList = VersionChecker.VersionInfo.hotUpdateAssemblyList;
         foreach (var assemblyName in asList)
         {
             Debug.Log($"load assembly {assemblyName}");

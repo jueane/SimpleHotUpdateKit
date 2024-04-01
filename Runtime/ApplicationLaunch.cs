@@ -29,11 +29,7 @@ public class ApplicationLaunch : MonoBehaviour
             yield return VersionChecker.Init();
             ApplicationConst.RefreshValues();
 
-            if (VersionChecker.isNewest)
-            {
-                Debug.Log($"System up-to-date, no updates needed. [{VersionChecker.versionInfo.codeVersion},{VersionChecker.versionInfo.resourceVersion}]");
-            }
-            else
+            if (!VersionChecker.isNewest)
             {
                 Debug.Log($"Updating all files");
                 yield return ResourceUpdater.Instance.UpdateAll();
@@ -46,9 +42,9 @@ public class ApplicationLaunch : MonoBehaviour
 
         AOTMetaDataManager.Startup();
 
-        if (VersionChecker.versionInfo.preprocessMethodList != null)
+        if (VersionChecker.VersionInfo.preprocessMethodList != null)
         {
-            foreach (var curMethod in VersionChecker.versionInfo.preprocessMethodList)
+            foreach (var curMethod in VersionChecker.VersionInfo.preprocessMethodList)
             {
                 yield return CallInit(curMethod);
             }

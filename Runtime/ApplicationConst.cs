@@ -53,7 +53,7 @@ public static class ApplicationConst
         CacheRelativePath = $"{CacheDir}_{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         BaseRemoteURLNoCache = $"{ServerAddress}/{NoCacheRelativePath}";
         var cachedDir = $"{ServerAddress}/{CacheRelativePath}";
-        BaseRemoteURL = $"{cachedDir}/{VersionChecker.versionInfo.codeVersion}";
-        BaseRemoteURL_RESOURCE = $"{cachedDir}/{VersionChecker.versionInfo.resourceVersion}{config.ResourceFolderSuffix}";
+        BaseRemoteURL = $"{cachedDir}/{VersionChecker.VersionInfo.codeVersion}";
+        BaseRemoteURL_RESOURCE = $"{cachedDir}/{VersionChecker.VersionInfo.resourceVersion}{config.ResourceFolderSuffix}";
     }
 }

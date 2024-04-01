@@ -17,7 +17,7 @@ public static class SimpleHotUpdateKitBuildCommand
         {
             Debug.Log($"Get remote version info");
             VersionChecker.FetchSync();
-            Debug.Log($"Remote version info: {VersionChecker.versionInfo.codeVersion},{VersionChecker.versionInfo.resourceVersion}");
+            Debug.Log($"Remote version info: {VersionChecker.VersionInfo.codeVersion},{VersionChecker.VersionInfo.resourceVersion}");
 
             if (!VersionChecker.Fetched)
             {
@@ -42,7 +42,7 @@ public static class SimpleHotUpdateKitBuildCommand
         var versionInfo = new VersionInfo()
         {
             codeVersion = BuildConst.BuildVersion,
-            resourceVersion = VersionChecker.versionInfo.resourceVersion,
+            resourceVersion = VersionChecker.VersionInfo.resourceVersion,
         };
 
         versionInfo.hotUpdateAssemblyList = HybridCLRSettings.Instance.hotUpdateAssemblies.ToList();

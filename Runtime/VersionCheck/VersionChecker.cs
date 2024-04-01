@@ -11,7 +11,8 @@ public static class VersionChecker
 
     public static string dataPointerUrl => $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
 
-    public static VersionInfo versionInfo = new VersionInfo();
+    private static VersionInfo _versionInfo;
+    public static VersionInfo VersionInfo => _versionInfo ??= new VersionInfo();
 
     public static bool Fetched { get; private set; }
     static string FetchedValue;
@@ -42,6 +43,7 @@ public static class VersionChecker
         Fetched = remoteValue != null;
         if (checkSucceed && Fetched)
         {
+            Debug.Log($"Remote value:\n{remoteValue}");
             VersionInfo remoteVersionInfo = null;
             try
             {
@@ -56,15 +58,15 @@ public static class VersionChecker
             FetchedValue = remoteValue;
             var remoteVer = remoteVersionInfo.codeVersion;
             var remoteResVer = remoteVersionInfo.resourceVersion;
-            if (versionInfo.codeVersion == remoteVer && versionInfo.resourceVersion == remoteResVer)
+            if (VersionInfo.codeVersion == remoteVer && VersionInfo.resourceVersion == remoteResVer)
             {
-                Debug.Log($"System up-to-date, no updates needed. [{versionInfo.codeVersion},{versionInfo.resourceVersion}]");
+                Debug.Log($"System up-to-date, no updates needed. [{VersionInfo.codeVersion},{VersionInfo.resourceVersion}]");
                 isNewest = true;
             }
             else
             {
-                Debug.Log($"New version found {versionInfo.codeVersion},{versionInfo.resourceVersion} -> {remoteVer},{remoteResVer}");
-                versionInfo = remoteVersionInfo;
+                Debug.Log($"New version found {VersionInfo.codeVersion},{VersionInfo.resourceVersion} -> {remoteVer},{remoteResVer}");
+                _versionInfo = remoteVersionInfo;
             }
         }
         else
@@ -75,7 +77,7 @@ public static class VersionChecker
 
     public static void ForceSetInEditor(String newVer)
     {
-        versionInfo = new VersionInfo()
+        _versionInfo = new VersionInfo()
         {
             codeVersion = newVer
         };
@@ -92,7 +94,7 @@ public static class VersionChecker
         try
         {
             var json = File.ReadAllText(VersionFilepath);
-            versionInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
+            _versionInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
         }
         catch (Exception e)
         {
