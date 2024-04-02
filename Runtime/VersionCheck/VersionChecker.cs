@@ -34,6 +34,7 @@ public static class VersionChecker
 
     public static void FetchSync()
     {
+        Debug.Log($"Version FetchSync, {VersionChecker.dataPointerUrl}");
         var rValue = RemoteReader.GetRemoteValue(dataPointerUrl);
         VersionFetchCallback(true, rValue);
     }
