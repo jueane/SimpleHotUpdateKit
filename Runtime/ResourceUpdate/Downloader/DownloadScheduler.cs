@@ -8,8 +8,8 @@ using Common.Singleton;
 
 public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 {
-    const int CONCURRENT = 5;
     const int MAX_RETRY_COUNT = int.MaxValue;
+    int CONCURRENT = ApplicationConst.config.downloadConcurrent;
 
     private Queue<DownloadJob> waitingQueue = new Queue<DownloadJob>();
     private List<DownloadJob> downloadingList = new List<DownloadJob>();

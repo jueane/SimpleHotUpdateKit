@@ -28,13 +28,14 @@ public static class VersionChecker
 
     public static async Task<bool> Fetch(int retryCount)
     {
+        Debug.Log($"Get remote version from {dataPointerUrl}");
         await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback, retryCount);
         return Fetched;
     }
 
     public static void FetchSync()
     {
-        Debug.Log($"Version FetchSync, {VersionChecker.dataPointerUrl}");
+        Debug.Log($"Get remote version from {dataPointerUrl}");
         var rValue = RemoteReader.GetRemoteValue(dataPointerUrl);
         VersionFetchCallback(true, rValue);
     }
