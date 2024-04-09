@@ -12,18 +12,25 @@ public class DownloadTest4 : IDownloadExecutor
 
     public IEnumerator Download(string url, string savePath)
     {
-        var downloadOpt = new DownloadConfiguration()
+        var downloadOpt = new DownloadConfiguration
         {
             CheckDiskSizeBeforeDownload = false,
-
-            // ChunkCount = 8, // file parts to download, the default value is 1
-            // ParallelDownload = true // download parts of the file as parallel or not. The default value is false
+            MinimumSizeOfChunking = 256 * 1024,
+            ParallelDownload = true, // download parts of file as parallel or not
+            BufferBlockSize = 10240, // usually, hosts support max to 8000 bytes
+            ChunkCount = 8, // file parts to download
+            MaxTryAgainOnFailover = int.MaxValue, // the maximum number of times to fail.
+            Timeout = 1000, // timeout (millisecond) per stream block reader
+            MaximumBytesPerSecond = 0, //1024 * 1024, // speed limited to 1MB/s
+            RequestConfiguration = // config and customize request headers
+            {
+                Accept = "*/*",
+                KeepAlive = false,
+                UseDefaultCredentials = false
+            }
         };
-        downloader = DownloadBuilder.New()
-            .WithUrl(url)
-            .WithFileLocation(savePath)
-            .WithConfiguration(downloadOpt)
-            .Build();
+
+        downloader = DownloadBuilder.New().WithUrl(url).WithFileLocation(savePath).WithConfiguration(downloadOpt).Build();
 
         downloader.DownloadProgressChanged += DownloaderOnDownloadProgressChanged;
 
