@@ -13,7 +13,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
 
     [Header("Update Settings")] public string updateServerURL = "http://yourupdateurl.com";
     public bool enableAutoUpdate = true;
-    public bool forceUpdate;
+    public bool forceUpdate = true;
     public int downloadConcurrent = 5;
 
     [Header("Preprocess")] public List<string> methodList;

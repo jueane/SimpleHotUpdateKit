@@ -22,14 +22,13 @@ public static class VersionChecker
     public static IEnumerator Init()
     {
         LoadLocalVersion();
-        var retryCount = ApplicationConst.config.forceUpdate ? int.MaxValue : 3;
-        yield return Fetch(retryCount).AsCoroutine();
+        yield return Fetch().AsCoroutine();
     }
 
-    public static async Task<bool> Fetch(int retryCount)
+    public static async Task<bool> Fetch()
     {
         Debug.Log($"Get remote version from {dataPointerUrl}");
-        await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback, retryCount);
+        await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback);
         return Fetched;
     }
 
