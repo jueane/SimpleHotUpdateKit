@@ -14,6 +14,8 @@ public class ApplicationLaunch : MonoBehaviour
 
     IEnumerator Start()
     {
+        Application.targetFrameRate = 30;
+
         Debug.Log($"Build version: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
         Debug.Log($"{nameof(ApplicationLaunch)}");
         SkipUpdate = !ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished();
