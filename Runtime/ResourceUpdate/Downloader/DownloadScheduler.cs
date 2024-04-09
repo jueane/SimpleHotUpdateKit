@@ -96,17 +96,16 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         {
             finishedQueue.Enqueue(job);
             info.downloadBytes = info.totalBytes;
-            var progressDesc = $"{finishedQueue.Count}/{downloadingList.Count + waitingQueue.Count + finishedQueue.Count}";
-            var skippedDesc = info.skipped ? $"[Skipped]" : null;
+            var progressDesc = $"{finishedQueue.Count}/{taskCount}";
             var sizeDesc = info.totalBytes.CalcMemoryMensurableUnit();
-            Debug.Log($"Download progress: {progressDesc} {skippedDesc} [{sizeDesc}], {info.savePath}");
+            Debug.Log($"Download progress: {progressDesc} [{sizeDesc}], retried {info.retryCount} times, {info.url}\n{info.savePath}");
         }
         else
         {
             if (info.retryCount < MAX_RETRY_COUNT)
             {
                 yield return new WaitForSeconds(3);
-                Debug.Log($"Download failed, saved:{saved}, checksum check passed:{info.checksumPassed}, retry {url}");
+                Debug.Log($"Download failed, saved:{saved}, checksum check passed:{info.checksumPassed}, retried {info.retryCount} times, [{info.totalBytes.CalcMemoryMensurableUnit()}], {url}");
                 info.retryCount++;
                 job.Reset();
                 StartJob(job);
