@@ -11,14 +11,13 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
     const int MAX_RETRY_COUNT = int.MaxValue;
     int CONCURRENT = ApplicationConst.config.downloadConcurrent;
 
+    int taskCount;
+
     private Queue<DownloadJob> waitingQueue = new Queue<DownloadJob>();
     private List<DownloadJob> downloadingList = new List<DownloadJob>();
-    private List<DownloadJob> savedList = new List<DownloadJob>();
     private Queue<DownloadJob> finishedQueue = new Queue<DownloadJob>();
 
-    bool NoRemainingTask => finishedQueue.Count == (waitingQueue.Count + downloadingList.Count + savedList.Count + finishedQueue.Count);
-
-    public bool IsAllDownloadFinished { get; private set; }
+    public bool IsAllDownloadFinished => finishedQueue.Count == taskCount;
 
     protected override void Init()
     {
@@ -32,12 +31,12 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             downloader = new DownloadTest4(),
         };
 
+        taskCount++;
         StartJob(newJob);
     }
 
     void StartJob(DownloadJob job)
     {
-        IsAllDownloadFinished = false;
         waitingQueue.Enqueue(job);
     }
 
@@ -56,9 +55,8 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             StartCoroutine(Download(curDl));
         }
 
-        if (!IsAllDownloadFinished && NoRemainingTask)
+        if (finishedQueue.Count == taskCount)
         {
-            IsAllDownloadFinished = true;
             waitingQueue.Clear();
             downloadingList.Clear();
             finishedQueue.Clear();
@@ -86,7 +84,6 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             info.saved = true;
 
             downloadingList.Remove(job);
-            savedList.Add(job);
 
             var task = ChecksumAsync(info.savePath, info.checksum);
             yield return task.AsCoroutine();
@@ -94,8 +91,6 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             if (info.checksumPassed)
                 File.WriteAllText(info.ChecksumFilePath, info.checksum.ToString());
         }
-
-        savedList.Remove(job);
 
         if (info.checksumPassed)
         {
@@ -132,5 +127,8 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 
     protected override void Dispose()
     {
+        waitingQueue.Clear();
+        downloadingList.Clear();
+        finishedQueue.Clear();
     }
 }
