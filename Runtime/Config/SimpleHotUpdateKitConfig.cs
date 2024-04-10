@@ -6,7 +6,6 @@ using UnityEngine;
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
     [Header("Editor Build Settings")] public string BuildDirectory = "Build";
-    public bool buildResource = false;
     public string FolderForUploadingData = "cdn_ready_content";
     public bool upload = false;
     public string aotListFilePath;
@@ -17,13 +16,6 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public int downloadConcurrent = 5;
 
     [Header("Preprocess")] public List<string> methodList;
-
-    [Header("Launch Class")] public string InvokeAssembly = "Assembly-CSharp";
-    public string InvokeClassName = "GameLogicLoader";
-
-    [Header("Version Control")] public int currentVersion = 1;
-
-    public bool debugMode = false;
 
     [Header("Branch Configurations")] public string CacheDir = "cache";
     public string NoCacheDir = "nocache";

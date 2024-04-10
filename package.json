@@ -1,9 +1,9 @@
 {
   "name": "com.jueane.simplehotupdatekit",
   "displayName": "SimpleHotUpdateKit",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "unity": "2019.4",
-  "description": "A simple and straightforward Unity Hot Update Kit",
+  "description": "A simple Unity Hot Update Kit",
   "keywords": [
     "unity",
     "package",

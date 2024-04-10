@@ -4,14 +4,12 @@ using System.Linq;
 using HybridCLR.Editor.Commands;
 using HybridCLR.Editor.Settings;
 using Newtonsoft.Json;
-using UnityEditor;
 using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static void Build(bool isFullPackage, Action<string> buildResourceFunc)
+    public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
     {
-        var includeResource = ApplicationConst.config.buildResource;
         Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}, includeResource: {includeResource}");
         if (!isFullPackage)
         {
@@ -82,13 +80,6 @@ public static class SimpleHotUpdateKitBuildCommand
         {
             throw new Exception("Check urls failed");
         }
-    }
-
-    // [MenuItem("Build/CheckURLs")]
-    public static void CheckURLsManual()
-    {
-        BuildConst.GenerateBuildVersion();
-        CheckURLs();
     }
 
     public static void CleanUploadFolder()
