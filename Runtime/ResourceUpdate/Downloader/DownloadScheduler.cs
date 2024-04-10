@@ -71,6 +71,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 
         yield return job.downloader.Download(url, savePath);
         downloadingList.Remove(job);
+        job.downloader.Dispose();
 
         var saved = File.Exists(savePath);
         if (saved)

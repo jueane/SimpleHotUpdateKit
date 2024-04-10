@@ -89,6 +89,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
             Debug.Log($"New download task: {totalBytes.CalcMemoryMensurableUnit()}, {taskList.Count} URLs\n{strDownloadTable.ToString()}");
 
             yield return new WaitUntil(() => DownloadScheduler.Instance.IsAllDownloadFinished);
+            DownloadScheduler.Release();
             updateStatus = CheckUpdateStatus.Finished;
         }
 
