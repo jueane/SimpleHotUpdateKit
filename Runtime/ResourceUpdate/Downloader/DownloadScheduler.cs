@@ -9,7 +9,7 @@ using Common.Singleton;
 public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 {
     const int MAX_RETRY_COUNT = int.MaxValue;
-    int CONCURRENT = ApplicationConst.config.downloadConcurrent;
+    int downloadConcurrent = ApplicationConst.config.downloadConcurrent;
 
     int taskCount;
 
@@ -48,18 +48,11 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             curDownloading.downloadDetailInfo.downloadSpeed = curDownloading.downloader.GetDownloadedSpeed();
         }
 
-        while (waitingQueue.Count > 0 && downloadingList.Count < CONCURRENT)
+        while (waitingQueue.Count > 0 && downloadingList.Count < downloadConcurrent)
         {
             var curDl = waitingQueue.Dequeue();
             downloadingList.Add(curDl);
             StartCoroutine(Download(curDl));
-        }
-
-        if (finishedQueue.Count == taskCount)
-        {
-            waitingQueue.Clear();
-            downloadingList.Clear();
-            finishedQueue.Clear();
         }
     }
 
