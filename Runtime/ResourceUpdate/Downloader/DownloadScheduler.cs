@@ -70,13 +70,12 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
             File.Delete(info.savePath);
 
         yield return job.downloader.Download(url, savePath);
+        downloadingList.Remove(job);
 
         var saved = File.Exists(savePath);
         if (saved)
         {
             info.saved = true;
-
-            downloadingList.Remove(job);
 
             var task = ChecksumAsync(info.savePath, info.checksum);
             yield return task.AsCoroutine();
