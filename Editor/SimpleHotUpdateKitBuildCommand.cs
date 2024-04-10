@@ -11,17 +11,19 @@ public static class SimpleHotUpdateKitBuildCommand
     public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
     {
         Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}, includeResource: {includeResource}");
+
+        Debug.Log($"Get remote version info");
+        VersionChecker.FetchSync();
         if (!isFullPackage)
         {
-            Debug.Log($"Get remote version info");
-            VersionChecker.FetchSync();
-            Debug.Log($"Remote version info: {VersionChecker.VersionInfo.codeVersion},{VersionChecker.VersionInfo.resourceVersion}");
-
             if (!VersionChecker.Fetched)
             {
                 throw new Exception("VersionChecker error");
             }
         }
+        Debug.Log($"Remote version info: {VersionChecker.VersionInfo.codeVersion},{VersionChecker.VersionInfo.resourceVersion}");
+
+        var remoteResVersion = VersionChecker.VersionInfo.resourceVersion;
 
         BuildConst.GenerateBuildVersion();
         CheckURLs();
@@ -67,11 +69,16 @@ public static class SimpleHotUpdateKitBuildCommand
             versionInfo.resourceVersion = BuildConst.BuildVersion;
             buildResourceFunc?.Invoke(BuildConst.FullPathForUploadingDataRes);
         }
+        else
+        {
+            versionInfo.resourceVersion = remoteResVersion;
+        }
 
         AssetsListGenerator.SaveFileList(includeResource);
 
         var verJson = JsonConvert.SerializeObject(versionInfo);
         File.WriteAllText($"{BuildConst.FullPathForUploadingDataNoCache}/{ApplicationConst.DataPointerFile}", verJson);
+        Debug.Log($"Generated version info: {verJson}");
     }
 
     public static void CheckURLs()
