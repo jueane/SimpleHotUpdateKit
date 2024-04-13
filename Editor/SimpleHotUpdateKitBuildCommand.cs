@@ -56,9 +56,6 @@ public static class SimpleHotUpdateKitBuildCommand
 
             CompileDllCommand.CompileDllActiveBuildTarget();
 
-            // if (isFullPackage)
-            //     BuildAssemblyCommand.CopyHotAssemblyToStreamingAssets();
-
             BuildAssemblyCommand.CopyMetaDataToUploadFolder();
 
             BuildAssemblyCommand.PrepareData();
