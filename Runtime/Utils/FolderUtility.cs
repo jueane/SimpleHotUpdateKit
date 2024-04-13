@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
-public class FolderUtility
+public static class FolderUtility
 {
+    public static bool IsDirectoryEmpty(string path)
+    {
+        return !Directory.EnumerateFileSystemEntries(path).Any();
+    }
+
     public static void EnsurePathExists(string path)
     {
         try
@@ -37,7 +44,7 @@ public class FolderUtility
         }
     }
 
-    public static void CopyDirectory(string sourceDir, string destinationDir)
+    public static void CopyDirectory(string sourceDir, string destinationDir, List<string> ignoreFileTypeList = null)
     {
         // 确保目标目录存在
         if (!Directory.Exists(destinationDir))
@@ -52,6 +59,22 @@ public class FolderUtility
         // 复制所有文件
         foreach (string file in files)
         {
+            if (ignoreFileTypeList != null)
+            {
+                bool skipThisFile = false;
+                foreach (var ignoreType in ignoreFileTypeList)
+                {
+                    if (file.EndsWith(ignoreType))
+                    {
+                        skipThisFile = true;
+                        break;
+                    }
+                }
+
+                if (skipThisFile)
+                    continue;
+            }
+
             string fileName = Path.GetFileName(file);
             string destinationFilePath = Path.Combine(destinationDir, fileName);
             File.Copy(file, destinationFilePath, true); // 如果目标文件已存在，覆盖

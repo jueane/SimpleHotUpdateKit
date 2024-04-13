@@ -98,8 +98,6 @@ public static class BuildAssemblyCommand
             File.Copy(srcDllPath, dllBytesPath, true);
             // Debug.Log($"[CopyAOTAssembliesToStreamingAssets] copy AOT dll {srcDllPath} -> {dllBytesPath}");
         }
-
-        AssetDatabase.Refresh();
     }
 
     static IReadOnlyList<string> GetAotList()

@@ -2,12 +2,11 @@
 using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using UnityEngine;
 
 public static class VersionChecker
 {
-    public static string VersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
+    public static string LocalVersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
 
     public static string dataPointerUrl => $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
 
@@ -15,26 +14,30 @@ public static class VersionChecker
     public static VersionInfo VersionInfo => _versionInfo ??= new VersionInfo();
 
     public static bool Fetched { get; private set; }
-    static string FetchedValue;
+    static string FetchedRemoteValue;
 
     public static bool isNewest { get; private set; }
 
     public static IEnumerator Init()
     {
-        LoadLocalVersion();
+        if (VersionInfo.TryReadFromFile(LocalVersionFilepath, out var readVer))
+        {
+            _versionInfo = readVer;
+        }
+
         yield return Fetch().AsCoroutine();
     }
 
     public static async Task<bool> Fetch()
     {
-        Debug.Log($"Get remote version from {dataPointerUrl}");
+        Debug.Log($"Get remote version {dataPointerUrl}");
         await RemoteReader.GetRemoteValue(dataPointerUrl, VersionFetchCallback);
         return Fetched;
     }
 
     public static void FetchSync()
     {
-        Debug.Log($"Get remote version from {dataPointerUrl}");
+        Debug.Log($"Get remote version {dataPointerUrl}");
         var rValue = RemoteReader.GetRemoteValue(dataPointerUrl);
         VersionFetchCallback(true, rValue);
     }
@@ -44,19 +47,15 @@ public static class VersionChecker
         Fetched = remoteValue != null;
         if (checkSucceed && Fetched)
         {
-            Debug.Log($"Remote value:\n{remoteValue}");
-            VersionInfo remoteVersionInfo = null;
-            try
+            Debug.Log($"Remote value: {remoteValue}");
+
+            if (!VersionInfo.TryParse(remoteValue, out var remoteVersionInfo))
             {
-                remoteVersionInfo = JsonConvert.DeserializeObject<VersionInfo>(remoteValue);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
+                Debug.Log($"Remote version is invalid");
                 return;
             }
 
-            FetchedValue = remoteValue;
+            FetchedRemoteValue = remoteValue;
             var remoteVer = remoteVersionInfo.codeVersion;
             var remoteResVer = remoteVersionInfo.resourceVersion;
             if (VersionInfo.codeVersion == remoteVer && VersionInfo.resourceVersion == remoteResVer)
@@ -84,32 +83,13 @@ public static class VersionChecker
         };
     }
 
-    static void LoadLocalVersion()
-    {
-        if (!File.Exists(VersionFilepath))
-        {
-            Debug.Log($"VersionFilepath not exist");
-            return;
-        }
-
-        try
-        {
-            var json = File.ReadAllText(VersionFilepath);
-            _versionInfo = JsonConvert.DeserializeObject<VersionInfo>(json);
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Local version is invalid");
-        }
-    }
-
     public static void WriteVersionFile()
     {
-        File.WriteAllText(VersionFilepath, FetchedValue);
+        File.WriteAllText(LocalVersionFilepath, FetchedRemoteValue);
     }
 
     public static bool IsLastDownloadFinished()
     {
-        return File.Exists(VersionFilepath);
+        return File.Exists(LocalVersionFilepath);
     }
 }

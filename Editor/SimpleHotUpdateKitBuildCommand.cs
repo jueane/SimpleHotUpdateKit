@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HybridCLR.Editor.Commands;
 using HybridCLR.Editor.Settings;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
@@ -21,6 +23,7 @@ public static class SimpleHotUpdateKitBuildCommand
                 throw new Exception("VersionChecker error");
             }
         }
+
         Debug.Log($"Remote version info: {VersionChecker.VersionInfo.codeVersion},{VersionChecker.VersionInfo.resourceVersion}");
 
         var remoteResVersion = VersionChecker.VersionInfo.resourceVersion;
@@ -35,8 +38,6 @@ public static class SimpleHotUpdateKitBuildCommand
 
         CleanUploadFolder();
         FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingData);
-        if (includeResource)
-            FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataRes);
         FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataNoCache);
 
         var versionInfo = new VersionInfo()
@@ -55,8 +56,8 @@ public static class SimpleHotUpdateKitBuildCommand
 
             CompileDllCommand.CompileDllActiveBuildTarget();
 
-            if (isFullPackage)
-                BuildAssemblyCommand.CopyHotAssemblyToStreamingAssets();
+            // if (isFullPackage)
+            //     BuildAssemblyCommand.CopyHotAssemblyToStreamingAssets();
 
             BuildAssemblyCommand.CopyMetaDataToUploadFolder();
 
@@ -66,18 +67,42 @@ public static class SimpleHotUpdateKitBuildCommand
         Debug.Log($"Build Resources: {includeResource}");
         if (includeResource)
         {
+            FolderUtility.EnsurePathExists(BuildConst.FullPathForUploadingDataRes);
             versionInfo.resourceVersion = BuildConst.BuildVersion;
             buildResourceFunc?.Invoke(BuildConst.FullPathForUploadingDataRes);
+            if (FolderUtility.IsDirectoryEmpty(BuildConst.FullPathForUploadingDataRes))
+            {
+                Debug.Log($"Build Resources: no resource found");
+                includeResource = false;
+            }
         }
         else
         {
             versionInfo.resourceVersion = remoteResVersion;
         }
 
+        // Copy bundled assets to Application.streamingAssetsPath
+        string bundledAssetsPath = null;
+        if (isFullPackage)
+        {
+            bundledAssetsPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
+            FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingData, bundledAssetsPath);
+            if (includeResource)
+                FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingDataRes, bundledAssetsPath);
+        }
+
         AssetsListGenerator.SaveFileList(includeResource);
 
         var verJson = JsonConvert.SerializeObject(versionInfo);
-        File.WriteAllText($"{BuildConst.FullPathForUploadingDataNoCache}/{ApplicationConst.DataPointerFile}", verJson);
+        File.WriteAllText(Path.Combine(BuildConst.FullPathForUploadingDataNoCache, ApplicationConst.DataPointerFile), verJson);
+
+        if (isFullPackage)
+        {
+            File.WriteAllText(Path.Combine(bundledAssetsPath, ApplicationConst.DataPointerFile), verJson);
+        }
+
+        AssetDatabase.Refresh();
+
         Debug.Log($"Generated version info: {verJson}");
     }
 

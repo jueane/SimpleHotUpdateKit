@@ -18,8 +18,11 @@ public class ApplicationLaunch : MonoBehaviour
 
         Debug.Log($"Build version: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
         Debug.Log($"{nameof(ApplicationLaunch)}");
+
+        BundledResourceDeployer.TryDeploy();
+
         SkipUpdate = !ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished();
-        Debug.Log($"Skip update: {SkipUpdate}");
+        Debug.Log($"Allow Skip update: {SkipUpdate}");
 
         if (SkipUpdate)
         {
