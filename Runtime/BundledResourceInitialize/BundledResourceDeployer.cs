@@ -13,6 +13,8 @@ public static class BundledResourceDeployer
     {
         try
         {
+            BetterStreamingAssets.Initialize();
+
             Debug.Log($"Check bundled version info {BundledResVersionFilepath}");
             if (!VersionInfo.TryReadFromFile(BundledResVersionFilepath, out var bundledVersionInfo))
             {
