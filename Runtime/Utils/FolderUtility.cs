@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 public static class FolderUtility
 {
@@ -39,24 +40,27 @@ public static class FolderUtility
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error occurred while creating folders: " + ex.Message);
+            Debug.Log("Error occurred while creating folders: " + ex.Message);
             // You can handle the exception as per your requirement
         }
     }
 
     public static void CopyDirectory(string sourceDir, string destinationDir, List<string> ignoreFileTypeList = null)
     {
-        // 确保目标目录存在
+        if (!Directory.Exists(sourceDir))
+        {
+            Debug.Log($"No assets found in directory: {sourceDir}");
+            return;
+        }
+
         if (!Directory.Exists(destinationDir))
         {
             Directory.CreateDirectory(destinationDir);
         }
 
-        // 获取源目录中的所有文件和子目录
         string[] files = Directory.GetFiles(sourceDir);
         string[] subDirs = Directory.GetDirectories(sourceDir);
 
-        // 复制所有文件
         foreach (string file in files)
         {
             if (ignoreFileTypeList != null)
@@ -80,7 +84,6 @@ public static class FolderUtility
             File.Copy(file, destinationFilePath, true); // 如果目标文件已存在，覆盖
         }
 
-        // 递归复制子目录
         foreach (string subDir in subDirs)
         {
             string dirName = Path.GetFileName(subDir);
@@ -91,17 +94,14 @@ public static class FolderUtility
 
     public static void ClearDirectory(string directoryPath)
     {
-        // 获取目录中的所有文件和子目录
         string[] files = Directory.GetFiles(directoryPath);
         string[] directories = Directory.GetDirectories(directoryPath);
 
-        // 删除目录中的文件
         foreach (string file in files)
         {
             File.Delete(file);
         }
 
-        // 递归清空子目录
         foreach (string subDirectory in directories)
         {
             Directory.Delete(subDirectory, true);
