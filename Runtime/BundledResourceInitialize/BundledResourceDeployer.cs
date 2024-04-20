@@ -54,12 +54,13 @@ public static class BundledResourceDeployer
 
     public static void CopyBundledAssetsToPersistentDataPath()
     {
-        var srcDir = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
         var dstDir = ApplicationConst.LoadRootPath;
 
 #if UNITY_ANDROID
+        var srcDir = Path.Combine(ApplicationConst.config.LoadRootDirectory);
         FolderUtilityForAndroid.CopyDirectory(srcDir, dstDir, new List<string>() { ".meta" });
 #else
+        var srcDir = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
         FolderUtility.CopyDirectory(srcDir, dstDir, new List<string>() { ".meta" });
 #endif
 
