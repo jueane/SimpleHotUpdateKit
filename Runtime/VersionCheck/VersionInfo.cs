@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Main.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -34,6 +35,24 @@ public class VersionInfo
         }
 
         var json = File.ReadAllText(filePath);
+        if (!TryParse(json, out newVersionInfo))
+        {
+            Debug.Log($"Local version is invalid, path: {filePath}");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static bool TryReadVersionFromBundledForAndroid(string filePath, out VersionInfo newVersionInfo)
+    {
+        newVersionInfo = null;
+        if (!FileUtils.IsFileExistOnAndroid(filePath))
+        {
+            Debug.Log($"Version file not exist, path: {filePath}");
+            return false;
+        }
+        var json = FileUtils.ReadAllTextFromStreamingDataOnAndroid(filePath);
         if (!TryParse(json, out newVersionInfo))
         {
             Debug.Log($"Local version is invalid, path: {filePath}");

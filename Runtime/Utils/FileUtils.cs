@@ -29,5 +29,25 @@ namespace Main.Utils
                 return false;
             }
         }
+
+        public static bool IsFileExistOnAndroid(string filePath)
+        {
+            return BetterStreamingAssets.FileExists(filePath);
+        }
+
+        public static string ReadAllTextFromStreamingDataOnAndroid(string filePath)
+        {
+            return BetterStreamingAssets.ReadAllText(filePath);
+        }
+
+        public static string[] ReadAllLinesFromStreamingDataOnAndroid(string filePath)
+        {
+            return BetterStreamingAssets.ReadAllLines(filePath);
+        }
+
+        public static byte[] ReadAllBytesFromStreamingDataOnAndroid(string filePath)
+        {
+            return BetterStreamingAssets.ReadAllBytes(filePath);
+        }
     }
 }

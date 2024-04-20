@@ -5,6 +5,7 @@ using UnityEngine;
 
 public static class BundledResourceDeployer
 {
+    public static string BundledResVersionRelativeFilepath => $"{ApplicationConst.config.LoadRootDirectory}/{ApplicationConst.DataPointerFile}";
     public static string BundledResVersionFilepath => $"{Application.streamingAssetsPath}/{ApplicationConst.config.LoadRootDirectory}/{ApplicationConst.DataPointerFile}";
 
     static VersionInfo versionInfo;
@@ -16,11 +17,20 @@ public static class BundledResourceDeployer
             BetterStreamingAssets.Initialize();
 
             Debug.Log($"Check bundled version info {BundledResVersionFilepath}");
+
+#if UNITY_ANDROID
+            if (!VersionInfo.TryReadVersionFromBundledForAndroid(BundledResVersionRelativeFilepath, out var bundledVersionInfo))
+            {
+                Debug.Log($"No bundled assets exist");
+                return;
+            }
+#else
             if (!VersionInfo.TryReadFromFile(BundledResVersionFilepath, out var bundledVersionInfo))
             {
                 Debug.Log($"No bundled assets exist");
                 return;
             }
+#endif
 
             var localInfoExist = VersionInfo.TryReadFromFile(VersionChecker.LocalVersionFilepath, out var localVersionInfo);
             var isBundledInfoNewer = bundledVersionInfo.IsNewerThan(localVersionInfo);
