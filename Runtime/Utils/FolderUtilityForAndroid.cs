@@ -34,8 +34,6 @@ public class FolderUtilityForAndroid
                     continue;
             }
 
-            // Debug.Log($"Copy file: {file}");
-
             string fileName = Path.GetFileName(curSrcFile);
 
             string dstRelativeFilepath = curSrcFile;
@@ -47,7 +45,6 @@ public class FolderUtilityForAndroid
             if (destinationFilePath.LastIndexOf("/") >= 0)
             {
                 var dstDir = destinationFilePath.Substring(0, destinationFilePath.LastIndexOf("/"));
-                Debug.Log($"Dest dir {dstDir}");
                 FolderUtility.EnsurePathExists(dstDir);
             }
             File.WriteAllBytes(destinationFilePath, data);
