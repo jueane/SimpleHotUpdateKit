@@ -22,7 +22,7 @@ public class ApplicationLaunch : MonoBehaviour
         BundledResourceDeployer.TryDeploy();
 
         SkipUpdate = !ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished();
-        Debug.Log($"Allow Skip update: {SkipUpdate}");
+        Debug.Log($"Allow skip update: {SkipUpdate}");
 
         if (SkipUpdate)
         {
