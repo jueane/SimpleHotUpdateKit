@@ -5,39 +5,23 @@ using UnityEngine;
 
 public static class BundledResourceDeployer
 {
-    public static string BundledResVersionRelativeFilepath => $"{ApplicationConst.config.LoadRootDirectory}/{ApplicationConst.DataPointerFile}";
-    public static string BundledResVersionFilepath => $"{Application.streamingAssetsPath}/{ApplicationConst.config.LoadRootDirectory}/{ApplicationConst.DataPointerFile}";
-
-    static VersionInfo versionInfo;
-
     public static void TryDeploy()
     {
         try
         {
+            Debug.Log($"Trying deploying bundled resources");
+
             BetterStreamingAssets.Initialize();
 
-            Debug.Log($"Check bundled version info {BundledResVersionFilepath}");
+            VersionInfo.TryReadFromBundle(out var bundledVersionInfo);
 
-#if UNITY_ANDROID
-            if (!VersionInfo.TryReadVersionFromBundledForAndroid(BundledResVersionRelativeFilepath, out var bundledVersionInfo))
-            {
-                Debug.Log($"No bundled assets exist");
-                return;
-            }
-#else
-            if (!VersionInfo.TryReadFromFile(BundledResVersionFilepath, out var bundledVersionInfo))
-            {
-                Debug.Log($"No bundled assets exist");
-                return;
-            }
-#endif
+            var localVersionValid = VersionInfo.TryReadFromLocal(out var localVersionInfo);
 
-            var localInfoExist = VersionInfo.TryReadFromFile(VersionChecker.LocalVersionFilepath, out var localVersionInfo);
             var isBundledInfoNewer = bundledVersionInfo.IsNewerThan(localVersionInfo);
 
             Debug.Log($"Bundled version info is newer than local: {isBundledInfoNewer}");
 
-            if (!localInfoExist || isBundledInfoNewer)
+            if (!localVersionValid || isBundledInfoNewer)
             {
                 CopyBundledAssetsToPersistentDataPath();
             }
@@ -52,17 +36,21 @@ public static class BundledResourceDeployer
         }
     }
 
-    public static void CopyBundledAssetsToPersistentDataPath()
+    static void CopyBundledAssetsToPersistentDataPath()
     {
         var dstDir = ApplicationConst.LoadRootPath;
+        var ignoreTypeList = new List<string>() {".meta"};
 
-#if UNITY_ANDROID
-        var srcDir = Path.Combine(ApplicationConst.config.LoadRootDirectory);
-        FolderUtilityForAndroid.CopyDirectory(srcDir, dstDir, new List<string>() { ".meta" });
-#else
-        var srcDir = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
-        FolderUtility.CopyDirectory(srcDir, dstDir, new List<string>() { ".meta" });
-#endif
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            var srcDir = Path.Combine(ApplicationConst.config.LoadRootDirectory);
+            FolderUtilityForAndroid.CopyDirectory(srcDir, dstDir, ignoreTypeList);
+        }
+        else
+        {
+            var srcDir = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
+            FolderUtility.CopyDirectory(srcDir, dstDir, ignoreTypeList);
+        }
 
         Debug.Log($"Bundled assets deployed successfully to {ApplicationConst.LoadRootPath}");
     }

@@ -6,8 +6,6 @@ using UnityEngine;
 
 public static class VersionChecker
 {
-    public static string LocalVersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
-
     public static string dataPointerUrl => $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
 
     private static VersionInfo _versionInfo;
@@ -20,9 +18,9 @@ public static class VersionChecker
 
     public static IEnumerator Init()
     {
-        if (VersionInfo.TryReadFromFile(LocalVersionFilepath, out var readVer))
+        if (VersionInfo.TryReadFromLocal(out var ver))
         {
-            _versionInfo = readVer;
+            _versionInfo = ver;
         }
 
         yield return Fetch().AsCoroutine();
@@ -85,11 +83,11 @@ public static class VersionChecker
 
     public static void WriteVersionFile()
     {
-        File.WriteAllText(LocalVersionFilepath, FetchedRemoteValue);
+        File.WriteAllText(VersionInfo.LocalVersionFilepath, FetchedRemoteValue);
     }
 
     public static bool IsLastDownloadFinished()
     {
-        return File.Exists(LocalVersionFilepath);
+        return File.Exists(VersionInfo.LocalVersionFilepath);
     }
 }

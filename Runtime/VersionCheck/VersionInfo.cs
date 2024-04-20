@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Main.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
 
 public class VersionInfo
 {
+    public static string LocalVersionFilepath => $"{ApplicationConst.LoadRootPath}/{ApplicationConst.DataPointerFile}";
+
     public string codeVersion;
     public string resourceVersion;
     public List<string> hotUpdateAssemblyList = new List<string>();
@@ -24,38 +25,45 @@ public class VersionInfo
         return dateTime1 > dateTime2;
     }
 
-    public static bool TryReadFromFile(string filePath, out VersionInfo newVersionInfo)
+    public static bool TryReadFromBundle(out VersionInfo bundledVersionInfo)
     {
-        newVersionInfo = null;
+        bundledVersionInfo = null;
 
-        if (!File.Exists(filePath))
+        string relativePath = $"{ApplicationConst.config.LoadRootDirectory}/{ApplicationConst.DataPointerFile}";
+        Debug.Log($"Check bundled version info: {relativePath}");
+
+        if (!BetterStreamingAssets.FileExists(relativePath))
         {
-            Debug.Log($"Version file not exist, path: {filePath}");
+            Debug.Log($"Bundled version is not exist: {relativePath}");
             return false;
         }
 
-        var json = File.ReadAllText(filePath);
-        if (!TryParse(json, out newVersionInfo))
+        var json = BetterStreamingAssets.ReadAllText(relativePath);
+        if (!TryParse(json, out bundledVersionInfo))
         {
-            Debug.Log($"Local version is invalid, path: {filePath}");
+            Debug.Log($"Bundled version is invalid: {relativePath}");
             return false;
         }
 
         return true;
     }
 
-    public static bool TryReadVersionFromBundledForAndroid(string filePath, out VersionInfo newVersionInfo)
+    public static bool TryReadFromLocal(out VersionInfo newVersionInfo)
     {
+        Debug.Log($"Check local version info: {LocalVersionFilepath}");
+
         newVersionInfo = null;
-        if (!FileUtils.IsFileExistOnAndroid(filePath))
+
+        if (!File.Exists(LocalVersionFilepath))
         {
-            Debug.Log($"Version file not exist, path: {filePath}");
+            Debug.Log($"Local version is not exist: {LocalVersionFilepath}");
             return false;
         }
-        var json = FileUtils.ReadAllTextFromStreamingDataOnAndroid(filePath);
+
+        var json = File.ReadAllText(LocalVersionFilepath);
         if (!TryParse(json, out newVersionInfo))
         {
-            Debug.Log($"Local version is invalid, path: {filePath}");
+            Debug.Log($"Local version is not exist: {LocalVersionFilepath}");
             return false;
         }
 
