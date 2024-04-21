@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HybridCLR.Editor.Commands;
@@ -10,7 +9,7 @@ using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc)
+    public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc, bool copyResourcesToStreamingData = true)
     {
         Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}, includeResource: {includeResource}");
 
@@ -84,7 +83,7 @@ public static class SimpleHotUpdateKitBuildCommand
         {
             bundledAssetsPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
             FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingData, bundledAssetsPath);
-            if (includeResource)
+            if (includeResource && copyResourcesToStreamingData)
                 FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingDataRes, bundledAssetsPath);
         }
 
