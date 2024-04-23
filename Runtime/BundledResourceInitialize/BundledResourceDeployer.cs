@@ -13,7 +13,12 @@ public static class BundledResourceDeployer
 
             BetterStreamingAssets.Initialize();
 
-            VersionInfo.TryReadFromBundle(out var bundledVersionInfo);
+            var bundledVersionFileExist = VersionInfo.TryReadFromBundle(out var bundledVersionInfo);
+            if (!bundledVersionFileExist)
+            {
+                Debug.Log($"Bundled version file does not exist");
+                return;
+            }
 
             var localVersionValid = VersionInfo.TryReadFromLocal(out var localVersionInfo);
 
