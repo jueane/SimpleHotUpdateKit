@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Common.Singleton;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
 {
@@ -74,6 +76,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
         {
             updateStatus = ResourceUpdater.CheckUpdateStatus.Updating;
 
+            var timer = Stopwatch.StartNew();
             StringBuilder strDownloadTable = new StringBuilder();
 
             foreach (var taskInfo in taskList)
@@ -91,6 +94,10 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
             yield return new WaitUntil(() => DownloadScheduler.Instance.IsAllDownloadFinished);
             DownloadScheduler.Release();
             updateStatus = CheckUpdateStatus.Finished;
+
+            var min1 = timer.Elapsed.TotalMinutes;
+            Debug.Log($"Download all resources cost time: {min1:N2} minutes");
+            timer.Stop();
         }
 
         Debug.Log($"Downloaded {taskList.Count} files");

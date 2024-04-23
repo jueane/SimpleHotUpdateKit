@@ -7,11 +7,13 @@ using UnityEngine.Networking;
 
 public class DownloadTest1 : IDownloadExecutor
 {
-    DownloadHandler downloadHandler;
+    UnityWebRequest request;
+    float startTime;
 
     public IEnumerator Download(string url, string savedPath)
     {
-        UnityWebRequest request = UnityWebRequest.Get(url);
+        request = UnityWebRequest.Get(url);
+        this.startTime = Time.time;
         yield return request.SendWebRequest();
 
         if (request.error != null)
@@ -19,7 +21,6 @@ public class DownloadTest1 : IDownloadExecutor
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            downloadHandler = request.downloadHandler;
             byte[] downloadedData = request.downloadHandler.data;
 
             while (true)
@@ -38,23 +39,25 @@ public class DownloadTest1 : IDownloadExecutor
         }
         else
         {
-            // 下载失败
             Debug.LogError($"Resource download failed: {request.error}, url: {url}");
         }
     }
 
     public long GetDownloadedSize()
     {
-        return downloadHandler?.data.Length ?? 0;
+        return (long)request.downloadedBytes;
     }
 
     public double GetDownloadedSpeed()
     {
-        throw new NotImplementedException();
+        var timeElapsed = Time.time - startTime;
+        if (timeElapsed <= 0)
+            return 0;
+        return request.downloadedBytes / timeElapsed;
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        request.Dispose();
     }
 }
