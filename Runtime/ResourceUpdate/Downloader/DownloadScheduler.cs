@@ -28,7 +28,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         var newJob = new DownloadJob
         {
             downloadDetailInfo = downloadDetailInfo,
-            downloader = new DownloadTest4(),
+            downloader = new DownloadTest3(),
         };
 
         taskCount++;
