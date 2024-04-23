@@ -28,7 +28,6 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         var newJob = new DownloadJob
         {
             downloadDetailInfo = downloadDetailInfo,
-            downloader = new DownloadTest3(),
         };
 
         taskCount++;
@@ -37,6 +36,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
 
     void StartJob(DownloadJob job)
     {
+        job.CreateNewDownloader();
         waitingQueue.Enqueue(job);
     }
 
@@ -52,6 +52,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         {
             var curDl = waitingQueue.Dequeue();
             downloadingList.Add(curDl);
+            curDl.downloadDetailInfo.downloadStarted = true;
             StartCoroutine(Download(curDl));
         }
     }

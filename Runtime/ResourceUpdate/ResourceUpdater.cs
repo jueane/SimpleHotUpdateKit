@@ -81,10 +81,6 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
 
             foreach (var taskInfo in taskList)
             {
-                if (taskInfo.downloadStarted)
-                    continue;
-
-                taskInfo.downloadStarted = true;
                 DownloadScheduler.Instance.Add(taskInfo);
                 strDownloadTable.Append($"{taskInfo.url}, save path: \n{taskInfo.savePath}");
             }

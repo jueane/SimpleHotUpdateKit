@@ -7,10 +7,17 @@ public class DownloadJob
 
     public IDownloadExecutor downloader;
 
+    public void CreateNewDownloader()
+    {
+        downloader = new Downloader1()
+        {
+            timeout = Mathf.Max(60, 50 * (int)(downloadDetailInfo.totalBytes / (1024 * 1024)))
+        };
+    }
+
     public void Reset()
     {
         downloader.Dispose();
-        downloader = new DownloadTest4();
         downloadDetailInfo.Reset();
     }
 }

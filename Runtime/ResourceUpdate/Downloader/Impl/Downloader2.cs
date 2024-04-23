@@ -2,7 +2,7 @@
 using Downloader;
 using UnityEngine;
 
-public class DownloadTest4 : IDownloadExecutor
+public class Downloader2 : IDownloadExecutor
 {
     IDownload downloader;
 

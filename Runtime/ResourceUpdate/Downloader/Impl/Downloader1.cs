@@ -4,15 +4,18 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.Networking;
 
-public class DownloadTest3 : IDownloadExecutor
+public class Downloader1 : IDownloadExecutor
 {
     UnityWebRequest request;
     float startTime;
 
+    public int timeout;
+
     public IEnumerator Download(string url, string savedPath)
     {
         request = UnityWebRequest.Get(url);
-        request.timeout = int.MaxValue;
+        if (this.timeout > 0)
+            request.timeout = this.timeout;
         request.downloadHandler = new DownloadHandlerFile(savedPath);
 
         var dir = Path.GetDirectoryName(savedPath);
