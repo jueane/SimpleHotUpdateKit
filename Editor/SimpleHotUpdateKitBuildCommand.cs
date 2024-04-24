@@ -9,7 +9,7 @@ using UnityEngine;
 
 public static class SimpleHotUpdateKitBuildCommand
 {
-    public static void Build(bool isFullPackage, bool includeResource, Action<string> buildResourceFunc, bool copyResourcesToStreamingData = true)
+    public static void Build(bool isFullPackage, bool includeResource, bool copyResourcesToStreamingData, Action<string> buildResourceFunc)
     {
         Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}, includeResource: {includeResource}");
 
