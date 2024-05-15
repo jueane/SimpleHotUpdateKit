@@ -82,6 +82,7 @@ public static class SimpleHotUpdateKitBuildCommand
         if (isFullPackage)
         {
             bundledAssetsPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
+            FolderUtility.ClearDirectory(bundledAssetsPath);
             FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingData, bundledAssetsPath);
             if (includeResource && copyResourcesToStreamingData)
                 FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingDataRes, bundledAssetsPath);
