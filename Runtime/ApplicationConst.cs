@@ -6,8 +6,8 @@ public static class ApplicationConst
     public static SimpleHotUpdateKitConfig config => SimpleHotUpdateKitConfig.Instance;
     public static SimpleHotUpdateKitIdentifyCode IdentifyCodeConfig => SimpleHotUpdateKitIdentifyCode.Instance;
 
-    public static string ServerAddress => config.updateCheckServerURL;
-    public static string CDNServerAddress => config.cdnServerURL;
+    public static string UpdateCheckServerURL => config.updateCheckServerURL;
+    public static string CDNServerURL => config.cdnServerURL;
 
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.LoadRootDirectory);
 
@@ -35,8 +35,6 @@ public static class ApplicationConst
     // 版本信息
     public static string DataPointerFile => config.DataPointerFile;
 
-    public static bool PackageMode;
-
     // 补充元数据的DLL目录
     public static string AOT_Dll_Dir => config.AdditionDlls;
 
@@ -52,8 +50,8 @@ public static class ApplicationConst
         Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
         CheckUpdateRelativePath = $"{UpdateInfoDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CdnDownloadRelativePath = $"{CdnDownloadDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        CheckUpdateBasePath = $"{ServerAddress}/{CheckUpdateRelativePath}";
-        var downloadUrl = $"{CDNServerAddress}/{CdnDownloadRelativePath}";
+        CheckUpdateBasePath = $"{UpdateCheckServerURL}/{CheckUpdateRelativePath}";
+        var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
         BaseRemoteURL_CODE = $"{downloadUrl}/{VersionChecker.VersionInfo.codeVersion}";
         BaseRemoteURL_RESOURCE = $"{downloadUrl}/{VersionChecker.VersionInfo.resourceVersion}{config.ResourceFolderSuffix}";
     }

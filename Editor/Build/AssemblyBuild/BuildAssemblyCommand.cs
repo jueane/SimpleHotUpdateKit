@@ -16,7 +16,7 @@ public static class BuildAssemblyCommand
     {
         var uploadUrl = baseRelativeDir;
         uploadUrl = uploadUrl.Replace(BuildConst.FolderForUploadingData, "");
-        uploadUrl = $"{ApplicationConst.ServerAddress}/{uploadUrl}";
+        uploadUrl = $"{ApplicationConst.UpdateCheckServerURL}/{uploadUrl}";
         uploadUrl = uploadUrl.Replace("\\", "/");
         uploadUrl = uploadUrl.Replace("//", "/");
 
