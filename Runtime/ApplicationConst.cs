@@ -12,7 +12,7 @@ public static class ApplicationConst
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.loadRootDirectory);
 
     public static string CdnDownloadDir => config.cdnDownloadDir;
-    public static string UpdateInfoDir => config.updateInfoDir;
+    public static string VersionInfoDir => config.versionInfoDir;
 
     public static string MainBranch => config.mainBranch;
 
@@ -48,7 +48,7 @@ public static class ApplicationConst
     public static void RefreshValues()
     {
         Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
-        CheckUpdateRelativePath = $"{UpdateInfoDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CheckUpdateRelativePath = $"{VersionInfoDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CdnDownloadRelativePath = $"{CdnDownloadDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CheckUpdateBasePath = $"{UpdateCheckServerURL}/{CheckUpdateRelativePath}";
         var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
