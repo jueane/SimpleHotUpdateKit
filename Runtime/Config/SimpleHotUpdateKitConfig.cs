@@ -6,39 +6,39 @@ using UnityEngine;
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
     [Header("Editor Build Settings")]
-    public string BuildDirectory = "Build";
-    public string FolderForUploadingData = "upload_content";
+    public string buildDirectory = "Build";
+    public string folderForUploadingData = "upload_content";
     public bool autoUpload = false;
     public string aotListFilePath;
 
     [Header("Update Settings")]
     public string updateCheckServerURL = "http://yourupdateurl.com";
-    public string UpdateInfoDir = "version_info";
+    public string updateInfoDir = "version_info";
     public string cdnServerURL = "http://yourupdateurl.com";
-    public string CdnDownloadDir = "cdn_download_content";
+    public string cdnDownloadDir = "cdn_download_content";
     public bool enableAutoUpdate = true;
     public bool forceUpdate = true;
     public int downloadConcurrent = 5;
 
     [Header("Branch Configurations")]
-    public string MainBranch = "default";
-    public string BuildBranch = "development";
+    public string mainBranch = "default";
+    public string buildBranch = "development";
 
     [Header("Download Configurations")]
-    public string LoadRootDirectory = "download_cache";
-    public string ResourceFolderSuffix = "res";
+    public string loadRootDirectory = "download_cache";
+    public string resourceFolderSuffix = "res";
 
-    public string ListFile = "downloadlist.txt";
-    public string SeparateSymbol = ",";
+    public string listFile = "downloadlist.txt";
+    public string separateSymbol = ",";
 
     // 程序集 on cdn
-    public string AssemblyFolder = "assembly_files";
+    public string assemblyFolder = "assembly_files";
 
     // 版本信息
-    public string DataPointerFile = "data_version";
+    public string dataPointerFile = "data_version";
 
     // 补充元数据的DLL目录
-    public string AdditionDlls = "addition_dlls";
+    public string additionDlls = "addition_dlls";
 
     [Header("Preprocess")]
     public List<string> methodList;

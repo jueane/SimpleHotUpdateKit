@@ -9,14 +9,14 @@ public static class ApplicationConst
     public static string UpdateCheckServerURL => config.updateCheckServerURL;
     public static string CDNServerURL => config.cdnServerURL;
 
-    public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.LoadRootDirectory);
+    public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.loadRootDirectory);
 
-    public static string CdnDownloadDir => config.CdnDownloadDir;
-    public static string UpdateInfoDir => config.UpdateInfoDir;
+    public static string CdnDownloadDir => config.cdnDownloadDir;
+    public static string UpdateInfoDir => config.updateInfoDir;
 
-    public static string MainBranch => config.MainBranch;
+    public static string MainBranch => config.mainBranch;
 
-    public static string BuildBranch => config.BuildBranch;
+    public static string BuildBranch => config.buildBranch;
 
     public static string CheckUpdateRelativePath;
     public static string CdnDownloadRelativePath;
@@ -26,17 +26,17 @@ public static class ApplicationConst
     public static string BaseRemoteURL_CODE;
     public static string BaseRemoteURL_RESOURCE;
 
-    public static string ListFile => config.ListFile;
-    public static string SeparateSymbol => config.SeparateSymbol;
+    public static string ListFile => config.listFile;
+    public static string SeparateSymbol => config.separateSymbol;
 
     // 程序集 on cdn
-    public static string AssemblyFolder => config.AssemblyFolder;
+    public static string AssemblyFolder => config.assemblyFolder;
 
     // 版本信息
-    public static string DataPointerFile => config.DataPointerFile;
+    public static string DataPointerFile => config.dataPointerFile;
 
     // 补充元数据的DLL目录
-    public static string AOT_Dll_Dir => config.AdditionDlls;
+    public static string AOT_Dll_Dir => config.additionDlls;
 
     public static string aot_load_dir_path => Path.Combine(ApplicationConst.LoadRootPath, AOT_Dll_Dir);
 
@@ -53,6 +53,6 @@ public static class ApplicationConst
         CheckUpdateBasePath = $"{UpdateCheckServerURL}/{CheckUpdateRelativePath}";
         var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
         BaseRemoteURL_CODE = $"{downloadUrl}/{VersionChecker.VersionInfo.codeVersion}";
-        BaseRemoteURL_RESOURCE = $"{downloadUrl}/{VersionChecker.VersionInfo.resourceVersion}{config.ResourceFolderSuffix}";
+        BaseRemoteURL_RESOURCE = $"{downloadUrl}/{VersionChecker.VersionInfo.resourceVersion}{config.resourceFolderSuffix}";
     }
 }

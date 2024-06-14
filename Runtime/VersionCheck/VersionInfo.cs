@@ -29,7 +29,7 @@ public class VersionInfo
     {
         bundledVersionInfo = null;
 
-        string relativePath = $"{ApplicationConst.config.LoadRootDirectory}/{ApplicationConst.DataPointerFile}";
+        string relativePath = $"{ApplicationConst.config.loadRootDirectory}/{ApplicationConst.DataPointerFile}";
         Debug.Log($"Check bundled version info: {relativePath}");
 
         if (!BetterStreamingAssets.FileExists(relativePath))

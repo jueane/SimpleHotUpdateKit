@@ -48,12 +48,12 @@ public static class BundledResourceDeployer
 
         if (Application.platform == RuntimePlatform.Android)
         {
-            var srcDir = Path.Combine(ApplicationConst.config.LoadRootDirectory);
+            var srcDir = Path.Combine(ApplicationConst.config.loadRootDirectory);
             FolderUtilityForAndroid.CopyDirectory(srcDir, dstDir, ignoreTypeList);
         }
         else
         {
-            var srcDir = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.LoadRootDirectory);
+            var srcDir = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.loadRootDirectory);
             FolderUtility.CopyDirectory(srcDir, dstDir, ignoreTypeList);
         }
 
