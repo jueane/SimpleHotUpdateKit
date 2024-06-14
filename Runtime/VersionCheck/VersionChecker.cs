@@ -6,7 +6,7 @@ using UnityEngine;
 
 public static class VersionChecker
 {
-    public static string dataPointerUrl => $"{ApplicationConst.BaseRemoteURLNoCache}/{ApplicationConst.DataPointerFile}";
+    public static string dataPointerUrl => $"{ApplicationConst.CheckUpdateBasePath}/{ApplicationConst.DataPointerFile}";
 
     private static VersionInfo _versionInfo;
     public static VersionInfo VersionInfo => _versionInfo ??= new VersionInfo();

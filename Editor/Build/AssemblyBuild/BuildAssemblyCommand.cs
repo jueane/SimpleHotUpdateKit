@@ -20,7 +20,7 @@ public static class BuildAssemblyCommand
         uploadUrl = uploadUrl.Replace("\\", "/");
         uploadUrl = uploadUrl.Replace("//", "/");
 
-        var downloadUrl = $"{ApplicationConst.BaseRemoteURL}/{ApplicationConst.AssemblyFolder}";
+        var downloadUrl = $"{ApplicationConst.BaseRemoteURL_CODE}/{ApplicationConst.AssemblyFolder}";
         downloadUrl = downloadUrl.Replace("\\", "/");
         downloadUrl = downloadUrl.Replace("//", "/");
 

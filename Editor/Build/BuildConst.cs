@@ -12,9 +12,9 @@ public static class BuildConst
 
     public static string BuildVersion;
 
-    public static string FullPathForUploadingData => Path.Combine(FolderForUploadingData, ApplicationConst.CacheRelativePath, BuildVersion);
-    public static string FullPathForUploadingDataRes => Path.Combine(FolderForUploadingData, ApplicationConst.CacheRelativePath, BuildVersion + ApplicationConst.config.ResourceFolderSuffix);
-    public static string FullPathForUploadingDataNoCache => Path.Combine(FolderForUploadingData, ApplicationConst.NoCacheRelativePath);
+    public static string FullPathForUploadingData => Path.Combine(FolderForUploadingData, ApplicationConst.CdnDownloadRelativePath, BuildVersion);
+    public static string FullPathForUploadingDataRes => Path.Combine(FolderForUploadingData, ApplicationConst.CdnDownloadRelativePath, BuildVersion + ApplicationConst.config.ResourceFolderSuffix);
+    public static string FullPathForUploadingDataNoCache => Path.Combine(FolderForUploadingData, ApplicationConst.CheckUpdateRelativePath);
 
     // 构建过程中补充元数据的DLL保存目录
     public static string aot_save_dir_path => Path.Combine(ProjectPath, FullPathForUploadingData, ApplicationConst.AOT_Dll_Dir);

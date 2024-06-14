@@ -6,23 +6,24 @@ public static class ApplicationConst
     public static SimpleHotUpdateKitConfig config => SimpleHotUpdateKitConfig.Instance;
     public static SimpleHotUpdateKitIdentifyCode IdentifyCodeConfig => SimpleHotUpdateKitIdentifyCode.Instance;
 
-    public static string ServerAddress => config.updateServerURL;
+    public static string ServerAddress => config.updateCheckServerURL;
+    public static string CDNServerAddress => config.cdnServerURL;
 
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.LoadRootDirectory);
 
-    public static string CacheDir => config.CacheDir;
-    public static string NoCacheDir => config.NoCacheDir;
+    public static string CdnDownloadDir => config.CdnDownloadDir;
+    public static string UpdateInfoDir => config.UpdateInfoDir;
 
     public static string MainBranch => config.MainBranch;
 
     public static string BuildBranch => config.BuildBranch;
 
-    public static string NoCacheRelativePath;
-    public static string CacheRelativePath;
+    public static string CheckUpdateRelativePath;
+    public static string CdnDownloadRelativePath;
 
-    public static string BaseRemoteURLNoCache;
+    public static string CheckUpdateBasePath;
 
-    public static string BaseRemoteURL;
+    public static string BaseRemoteURL_CODE;
     public static string BaseRemoteURL_RESOURCE;
 
     public static string ListFile => config.ListFile;
@@ -49,11 +50,11 @@ public static class ApplicationConst
     public static void RefreshValues()
     {
         Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
-        NoCacheRelativePath = $"{NoCacheDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        CacheRelativePath = $"{CacheDir}_{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        BaseRemoteURLNoCache = $"{ServerAddress}/{NoCacheRelativePath}";
-        var cachedDir = $"{ServerAddress}/{CacheRelativePath}";
-        BaseRemoteURL = $"{cachedDir}/{VersionChecker.VersionInfo.codeVersion}";
-        BaseRemoteURL_RESOURCE = $"{cachedDir}/{VersionChecker.VersionInfo.resourceVersion}{config.ResourceFolderSuffix}";
+        CheckUpdateRelativePath = $"{UpdateInfoDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CdnDownloadRelativePath = $"{CdnDownloadDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CheckUpdateBasePath = $"{ServerAddress}/{CheckUpdateRelativePath}";
+        var downloadUrl = $"{CDNServerAddress}/{CdnDownloadRelativePath}";
+        BaseRemoteURL_CODE = $"{downloadUrl}/{VersionChecker.VersionInfo.codeVersion}";
+        BaseRemoteURL_RESOURCE = $"{downloadUrl}/{VersionChecker.VersionInfo.resourceVersion}{config.ResourceFolderSuffix}";
     }
 }

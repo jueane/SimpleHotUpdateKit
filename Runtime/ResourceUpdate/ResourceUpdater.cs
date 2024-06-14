@@ -37,7 +37,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
         {
             new URLListHandler()
             {
-                baseUrl = $"{ApplicationConst.BaseRemoteURL}",
+                baseUrl = $"{ApplicationConst.BaseRemoteURL_CODE}",
             },
             new URLListHandler()
             {

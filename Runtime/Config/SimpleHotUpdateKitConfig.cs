@@ -5,24 +5,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SimpleHotUpdateKitConfig", menuName = "SimpleHotUpdateKitConfig/Config", order = 1)]
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
-    [Header("Editor Build Settings")] public string BuildDirectory = "Build";
-    public string FolderForUploadingData = "cdn_ready_content";
-    public bool upload = false;
+    [Header("Editor Build Settings")]
+    public string BuildDirectory = "Build";
+    public string FolderForUploadingData = "upload_content";
+    public bool autoUpload = false;
     public string aotListFilePath;
 
-    [Header("Update Settings")] public string updateServerURL = "http://yourupdateurl.com";
+    [Header("Update Settings")]
+    public string updateCheckServerURL = "http://yourupdateurl.com";
+    public string UpdateInfoDir = "version_info";
+    public string cdnServerURL = "http://yourupdateurl.com";
+    public string CdnDownloadDir = "cdn_download_content";
     public bool enableAutoUpdate = true;
     public bool forceUpdate = true;
     public int downloadConcurrent = 5;
 
-    [Header("Preprocess")] public List<string> methodList;
-
-    [Header("Branch Configurations")] public string CacheDir = "cache";
-    public string NoCacheDir = "nocache";
+    [Header("Branch Configurations")]
     public string MainBranch = "default";
     public string BuildBranch = "development";
 
-    [Header("Directory Configurations")] public string LoadRootDirectory = "download_cache";
+    [Header("Download Configurations")]
+    public string LoadRootDirectory = "download_cache";
     public string ResourceFolderSuffix = "res";
 
     public string ListFile = "downloadlist.txt";
@@ -36,6 +39,9 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
 
     // 补充元数据的DLL目录
     public string AdditionDlls = "addition_dlls";
+
+    [Header("Preprocess")]
+    public List<string> methodList;
 
     const string configLoadPath = "SimpleHotUpdateKitConfig/SimpleHotUpdateKitConfig";
     private static string configPath = $"Assets/Resources/{configLoadPath}";
