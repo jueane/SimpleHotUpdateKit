@@ -4,9 +4,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Common.Singleton;
+using UnityCommunity.UnitySingleton;
 
-public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
+public class DownloadScheduler : PersistentMonoSingleton<DownloadScheduler>
 {
     const int MAX_RETRY_COUNT = int.MaxValue;
     int downloadConcurrent = ApplicationConst.config.downloadConcurrent;
@@ -18,10 +18,6 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
     private Queue<DownloadJob> finishedQueue = new Queue<DownloadJob>();
 
     public bool IsAllDownloadFinished => finishedQueue.Count == taskCount;
-
-    protected override void Init()
-    {
-    }
 
     public void Add(DownloadDetailInfo downloadDetailInfo)
     {
@@ -118,7 +114,7 @@ public class DownloadScheduler : MonoSingletonSimple<DownloadScheduler>
         return actualChecksum == expectedChecksum;
     }
 
-    protected override void Dispose()
+    public override void ClearSingleton()
     {
         waitingQueue.Clear();
         downloadingList.Clear();

@@ -2,14 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using Common.Singleton;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using UnityCommunity.UnitySingleton;
 
-public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
+public class ResourceUpdater : PersistentMonoSingleton<ResourceUpdater>
 {
     public enum CheckUpdateStatus
     {
@@ -88,7 +86,7 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
             Debug.Log($"New download task: {totalBytes.CalcMemoryMensurableUnit()}, {taskList.Count} URLs\n{strDownloadTable.ToString()}");
 
             yield return new WaitUntil(() => DownloadScheduler.Instance.IsAllDownloadFinished);
-            DownloadScheduler.Release();
+            DownloadScheduler.DestroyInstance();
             updateStatus = CheckUpdateStatus.Finished;
 
             var min1 = timer.Elapsed.TotalMinutes;
@@ -124,9 +122,5 @@ public class ResourceUpdater : MonoSingletonSimple<ResourceUpdater>
             downloadBytes = newSize;
             downloadSpeed = speed;
         }
-    }
-
-    protected override void Dispose()
-    {
     }
 }
