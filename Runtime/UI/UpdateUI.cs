@@ -19,6 +19,8 @@ public class UpdateUI : MonoBehaviour
         downloadStatus.text = "";
         downloadProgress.text = "";
         slider.value = 0;
+
+        gameObject.SetActive(ApplicationConst.config.enableUpdate);
     }
 
     void Update()

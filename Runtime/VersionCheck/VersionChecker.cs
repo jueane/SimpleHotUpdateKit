@@ -23,7 +23,10 @@ public static class VersionChecker
             _versionInfo = ver;
         }
 
-        yield return Fetch().AsCoroutine();
+        if (ApplicationConst.config.enableUpdate)
+        {
+            yield return Fetch().AsCoroutine();
+        }
     }
 
     public static async Task<bool> Fetch()

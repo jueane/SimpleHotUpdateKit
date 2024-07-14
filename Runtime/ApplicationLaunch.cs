@@ -21,19 +21,23 @@ public class ApplicationLaunch : MonoBehaviour
 
         BundledResourceDeployer.TryDeploy();
 
-        SkipUpdate = !ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished();
-        Debug.Log($"Allow skip update: {SkipUpdate}");
+        SkipUpdate = (!ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished());
 
         if (SkipUpdate)
         {
-            Debug.Log($"No internet, update skipped");
+            if (!NetworkUtil.HasInternetConnectionCached)
+            {
+                Debug.Log($"No internet");
+            }
+
+            Debug.Log($"Skip update: {SkipUpdate}");
         }
         else
         {
             yield return VersionChecker.Init();
             ApplicationConst.RefreshValues();
 
-            if (!VersionChecker.isNewest)
+            if (ApplicationConst.config.enableUpdate && !VersionChecker.isNewest)
             {
                 Debug.Log($"Updating all files");
                 yield return ResourceUpdater.Instance.UpdateAll();
@@ -42,9 +46,11 @@ public class ApplicationLaunch : MonoBehaviour
             }
         }
 
-        AssemblyLoadManager.LoadAllAssembly();
-
-        AOTMetaDataManager.Startup();
+        if (ApplicationConst.config.enableUpdate)
+        {
+            AssemblyLoadManager.LoadAllAssembly();
+            AOTMetaDataManager.Startup();
+        }
 
         if (VersionChecker.VersionInfo.preprocessMethodList != null)
         {

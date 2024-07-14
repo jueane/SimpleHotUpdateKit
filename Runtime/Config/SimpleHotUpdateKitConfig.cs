@@ -12,11 +12,12 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public string aotListFilePath;
 
     [Header("Update Settings")]
+    public bool enableUpdate;
+    public bool forceUpdate = true;
     public string updateCheckServerURL = "http://yourupdateurl.com";
     public string versionInfoDir = "version_info";
     public string cdnServerURL = "http://yourupdateurl.com";
     public string cdnDownloadDir = "download_files";
-    public bool forceUpdate = true;
     public int downloadConcurrent = 5;
 
     [Header("Branch Configurations")]
