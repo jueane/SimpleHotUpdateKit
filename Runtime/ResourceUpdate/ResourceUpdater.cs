@@ -7,7 +7,7 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using UnityCommunity.UnitySingleton;
 
-public class ResourceUpdater : PersistentMonoSingleton<ResourceUpdater>
+internal class ResourceUpdater : PersistentMonoSingleton<ResourceUpdater>
 {
     public enum CheckUpdateStatus
     {

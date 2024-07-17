@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public static class BundledResourceDeployer
+internal static class BundledResourceDeployer
 {
     public static void TryDeploy()
     {

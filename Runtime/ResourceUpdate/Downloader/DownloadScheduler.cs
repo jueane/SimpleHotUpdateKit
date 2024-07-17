@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityCommunity.UnitySingleton;
 
-public class DownloadScheduler : PersistentMonoSingleton<DownloadScheduler>
+internal class DownloadScheduler : PersistentMonoSingleton<DownloadScheduler>
 {
     const int MAX_RETRY_COUNT = int.MaxValue;
     int downloadConcurrent = ApplicationConst.config.downloadConcurrent;

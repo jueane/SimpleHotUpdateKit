@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-public class ApplicationLaunch : MonoBehaviour
+internal class ApplicationLaunch : MonoBehaviour
 {
     WaitForSeconds wfs = new WaitForSeconds(1);
 

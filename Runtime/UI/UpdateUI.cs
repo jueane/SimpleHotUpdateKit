@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UpdateUI : MonoBehaviour
+internal class UpdateUI : MonoBehaviour
 {
     ResourceUpdater.CheckUpdateStatus lastStatus = ResourceUpdater.CheckUpdateStatus.None;
 
