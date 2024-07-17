@@ -14,7 +14,7 @@ public class ApplicationLaunch : MonoBehaviour
 
     IEnumerator Start()
     {
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 10;
 
         Debug.Log($"Build version: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
         Debug.Log($"{nameof(ApplicationLaunch)}");
@@ -51,6 +51,8 @@ public class ApplicationLaunch : MonoBehaviour
             AssemblyLoadManager.LoadAllAssembly();
             AOTMetaDataManager.Startup();
         }
+
+        Application.targetFrameRate = -1;
 
         if (VersionChecker.VersionInfo.preprocessMethodList != null)
         {
