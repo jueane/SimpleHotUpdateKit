@@ -14,6 +14,7 @@ internal class ApplicationLaunch : MonoBehaviour
 
     IEnumerator Start()
     {
+        var originFrameRate = Application.targetFrameRate;
         Application.targetFrameRate = 10;
 
         Debug.Log($"Build version: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
@@ -52,7 +53,7 @@ internal class ApplicationLaunch : MonoBehaviour
             AOTMetaDataManager.Startup();
         }
 
-        Application.targetFrameRate = -1;
+        Application.targetFrameRate = originFrameRate;
 
         if (VersionChecker.VersionInfo.preprocessMethodList != null)
         {
