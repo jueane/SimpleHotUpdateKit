@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using AssetList;
 using HybridCLR.Editor.Commands;
 using HybridCLR.Editor.Settings;
 using Newtonsoft.Json;
