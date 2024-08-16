@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SimpleHotUpdateKitConfig", menuName = "SimpleHotUpdateKitConfig/Config", order = 1)]
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
+    [Header("Branch Configurations")]
+    public string mainBranch = "default";
+    public string buildBranch = "development";
+
     [Header("Editor Build Settings")]
     public string buildDirectory = "Build";
     public string folderForUploadingData = "upload_content";
@@ -20,13 +24,8 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public string cdnDownloadDir = "download_files";
     public int downloadConcurrent = 5;
 
-    [Header("Branch Configurations")]
-    public string mainBranch = "default";
-    public string buildBranch = "development";
-
     [Header("Download Configurations")]
     public string loadRootDirectory = "download_cache";
-    public string resourceFolderSuffix = "res";
 
     public string listFile = "downloadlist.txt";
     public string separateSymbol = ",";

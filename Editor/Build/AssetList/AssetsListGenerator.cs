@@ -8,14 +8,14 @@ namespace AssetList
 {
     public static class AssetsListGenerator
     {
-        public static void SaveFileList(bool includeResource)
+        public static void SaveFileList(bool includeResource, VersionInfo versionInfo)
         {
             List<AssetCollection> assetCollectionList = new List<AssetCollection>()
             {
                 new AssetCollection()
                 {
                     rootDirectory = Path.Combine(BuildConst.ProjectPath, BuildConst.FullPathForUploadingData),
-                    savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingData}/{ApplicationConst.ListFile}",
+                    savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingData}/{ApplicationConst.ListFile}{versionInfo.codeVersion}",
                 }
             };
             if (includeResource)
@@ -23,7 +23,7 @@ namespace AssetList
                 assetCollectionList.Add(new AssetCollection()
                 {
                     rootDirectory = Path.Combine(BuildConst.ProjectPath, BuildConst.FullPathForUploadingDataRes),
-                    savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingDataRes}/{ApplicationConst.ListFile}",
+                    savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingDataRes}/{ApplicationConst.ListFile}{versionInfo.resourceVersion}",
                 });
             }
 

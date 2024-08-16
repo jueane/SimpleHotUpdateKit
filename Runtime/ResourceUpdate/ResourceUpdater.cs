@@ -36,16 +36,18 @@ internal class ResourceUpdater : PersistentMonoSingleton<ResourceUpdater>
             new URLListHandler()
             {
                 baseUrl = $"{ApplicationConst.BaseRemoteURL_CODE}",
+                versionCode = $"{VersionChecker.VersionInfo.codeVersion}",
             },
             new URLListHandler()
             {
                 baseUrl = $"{ApplicationConst.BaseRemoteURL_RESOURCE}",
+                versionCode = $"{VersionChecker.VersionInfo.resourceVersion}",
             },
         };
 
         foreach (var curURLListHandler in urlListHandlers)
         {
-            yield return RemoteReader.GetRemoteValueList(curURLListHandler.ListFileUrl, curURLListHandler.OnReadFileList).AsCoroutine();
+            yield return RemoteReader.GetRemoteValueList(curURLListHandler.ListFileUrl, curURLListHandler.OnReadFile).AsCoroutine();
         }
 
         List<string> skipList = new List<string>();

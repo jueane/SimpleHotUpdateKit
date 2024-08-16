@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class URLListHandler
 {
     public string baseUrl;
-    public string ListFileUrl => $"{baseUrl}/{ApplicationConst.ListFile}";
+    public string versionCode;
+    public string ListFileUrl => $"{baseUrl}/{ApplicationConst.ListFile}{versionCode}";
 
     public List<string> skipList { get; private set; } = new List<string>();
 
@@ -13,24 +15,21 @@ public class URLListHandler
 
     public long totalBytes { get; private set; } = 0;
 
-    public void OnReadFileList(bool a, List<string> fileList)
+    public void OnReadFile(string json)
     {
-        // StringBuilder skipListLog = new StringBuilder();
+        var assetList = JsonConvert.DeserializeObject<List<AssetList.AssetInfo>>(json);
+
         int skipCount = 0;
-        Debug.Log($"Parsed {fileList.Count} from {ListFileUrl}");
+        Debug.Log($"Parsed {assetList.Count} from {ListFileUrl}");
 
-        foreach (var curInfo in fileList)
+        foreach (var curInfo in assetList)
         {
-            if (string.IsNullOrEmpty(curInfo))
-                continue;
+            var curUrl = curInfo.relativePath;
+            var fileLen = curInfo.fileLength;
+            var crc = curInfo.crc;
 
-            var infoArray = curInfo.Split(ApplicationConst.SeparateSymbol.ToCharArray());
-            var curUrl = infoArray[0];
-            long.TryParse(infoArray[1], out var fileLen);
-            long.TryParse(infoArray[2], out var crc);
-
-            var fileUrl = $"{baseUrl}/{curUrl}";
-            var savePath = Path.Combine(ApplicationConst.LoadRootPath, curUrl);
+            var fileUrl = $"{baseUrl}/{curInfo.redirectRelativePath}";
+            var savePath = Path.Combine(ApplicationConst.LoadRootPath, curInfo.relativePath);
 
             var newTask = new DownloadDetailInfo()
             {

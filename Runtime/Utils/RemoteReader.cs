@@ -83,18 +83,17 @@ public static class RemoteReader
         }
     }
 
-    public static async Task GetRemoteValueList(string url, Action<bool, List<string>> callback)
+    public static async Task GetRemoteValueList(string url, Action<string> callback)
     {
         await GetRemoteValue(url, (success, value) =>
         {
             if (success)
             {
-                List<string> valueList = new List<string>(value.Split('\n'));
-                callback?.Invoke(true, valueList);
+                callback?.Invoke(value);
             }
             else
             {
-                callback?.Invoke(false, null);
+                callback?.Invoke(null);
             }
         });
     }

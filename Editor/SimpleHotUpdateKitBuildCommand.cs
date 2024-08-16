@@ -89,7 +89,7 @@ public static class SimpleHotUpdateKitBuildCommand
                 FolderUtility.CopyDirectory(BuildConst.FullPathForUploadingDataRes, bundledAssetsPath);
         }
 
-        AssetsListGenerator.SaveFileList(includeResource);
+        AssetsListGenerator.SaveFileList(includeResource, versionInfo);
 
         var verJson = JsonConvert.SerializeObject(versionInfo);
         File.WriteAllText(Path.Combine(BuildConst.FullPathForUploadingDataNoCache, ApplicationConst.DataPointerFile), verJson);

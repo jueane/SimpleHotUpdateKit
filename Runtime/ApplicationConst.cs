@@ -40,6 +40,9 @@ public static class ApplicationConst
 
     public static string aot_load_dir_path => Path.Combine(ApplicationConst.LoadRootPath, AOT_Dll_Dir);
 
+    public const string DataFolder = "Data";
+    public const string ResourceFolder = "Res";
+
     static ApplicationConst()
     {
         RefreshValues();
@@ -52,7 +55,7 @@ public static class ApplicationConst
         CdnDownloadRelativePath = $"{CdnDownloadDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CheckUpdateBasePath = $"{UpdateCheckServerURL}/{CheckUpdateRelativePath}";
         var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
-        BaseRemoteURL_CODE = $"{downloadUrl}/{VersionChecker.VersionInfo.codeVersion}";
-        BaseRemoteURL_RESOURCE = $"{downloadUrl}/{VersionChecker.VersionInfo.resourceVersion}{config.resourceFolderSuffix}";
+        BaseRemoteURL_CODE = $"{downloadUrl}/{ApplicationConst.DataFolder}";
+        BaseRemoteURL_RESOURCE = $"{downloadUrl}/{ApplicationConst.ResourceFolder}";
     }
 }

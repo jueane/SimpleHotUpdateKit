@@ -47,8 +47,6 @@ namespace AssetList
         public void SaveInfosToFile()
         {
             var json = JsonConvert.SerializeObject(assetInfoList);
-
-            var savePath = $"{BuildConst.ProjectPath}/{BuildConst.FullPathForUploadingData}/{ApplicationConst.ListFile}";
             File.WriteAllText(savePath, json);
             // 打印结果
             Debug.Log(json);
