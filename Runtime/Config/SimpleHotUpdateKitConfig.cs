@@ -12,16 +12,12 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     [Header("Editor Build Settings")]
     public string buildDirectory = "Build";
     public string folderForUploadingData = "upload_content";
-    public bool uploadAfterBuild = false;
     public string aotListFilePath;
 
     [Header("Update Settings")]
     public bool enableUpdate;
     public bool forceUpdate = true;
-    public string updateCheckServerURL = "http://yourupdateurl.com";
-    public string versionInfoDir = "download_files";
     public string cdnServerURL = "http://yourupdateurl.com";
-    public string cdnDownloadDir = "download_files";
     public int downloadConcurrent = 5;
 
     [Header("Download Configurations")]

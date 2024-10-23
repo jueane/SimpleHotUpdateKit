@@ -6,13 +6,9 @@ public static class ApplicationConst
     public static SimpleHotUpdateKitConfig config => SimpleHotUpdateKitConfig.Instance;
     public static SimpleHotUpdateKitIdentifyCode IdentifyCodeConfig => SimpleHotUpdateKitIdentifyCode.Instance;
 
-    public static string UpdateCheckServerURL => config.updateCheckServerURL;
     public static string CDNServerURL => config.cdnServerURL;
 
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.loadRootDirectory);
-
-    public static string CdnDownloadDir => config.cdnDownloadDir;
-    public static string VersionInfoDir => config.versionInfoDir;
 
     public static string MainBranch => config.mainBranch;
 
@@ -51,9 +47,9 @@ public static class ApplicationConst
     public static void RefreshValues()
     {
         Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
-        CheckUpdateRelativePath = $"{VersionInfoDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        CdnDownloadRelativePath = $"{CdnDownloadDir}/{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        CheckUpdateBasePath = $"{UpdateCheckServerURL}/{CheckUpdateRelativePath}";
+        CheckUpdateRelativePath = $"{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CdnDownloadRelativePath = $"{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CheckUpdateBasePath = $"{CDNServerURL}/{CheckUpdateRelativePath}";
         var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
         BaseRemoteURL_CODE = $"{downloadUrl}/{ApplicationConst.DataFolder}";
         BaseRemoteURL_RESOURCE = $"{downloadUrl}/{ApplicationConst.ResourceFolder}";
