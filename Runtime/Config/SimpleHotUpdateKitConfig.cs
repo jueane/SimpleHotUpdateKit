@@ -19,7 +19,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public bool enableUpdate;
     public bool forceUpdate = true;
     public string updateCheckServerURL = "http://yourupdateurl.com";
-    public string versionInfoDir = "version_info";
+    public string versionInfoDir = "download_files";
     public string cdnServerURL = "http://yourupdateurl.com";
     public string cdnDownloadDir = "download_files";
     public int downloadConcurrent = 5;
