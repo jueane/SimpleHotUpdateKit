@@ -32,21 +32,25 @@ public class AOTMetaDataManager
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("LoadMetadataForAOTAssembly");
 
-        foreach (var aotDllName in GetAotList())
+        var aotList = GetAotList();
+        if (aotList != null)
         {
-            string asFilepath = Path.Combine(ApplicationConst.aot_load_dir_path, $"{aotDllName}.bytes");
-
-            if (!File.Exists(asFilepath))
+            foreach (var aotDllName in GetAotList())
             {
-                Debug.Log($"File {asFilepath} not found!");
-                continue;
+                string asFilepath = Path.Combine(ApplicationConst.aot_load_dir_path, $"{aotDllName}.bytes");
+
+                if (!File.Exists(asFilepath))
+                {
+                    Debug.Log($"File {asFilepath} not found!");
+                    continue;
+                }
+
+                var dllBytes = File.ReadAllBytes(asFilepath);
+
+                // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
+                LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(dllBytes, mode);
+                sb.AppendLine($"  {aotDllName}. mode:{mode} ret:{err}");
             }
-
-            var dllBytes = File.ReadAllBytes(asFilepath);
-
-            // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
-            LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(dllBytes, mode);
-            sb.AppendLine($"  {aotDllName}. mode:{mode} ret:{err}");
         }
 
         Debug.Log(sb.ToString());

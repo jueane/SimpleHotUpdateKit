@@ -94,6 +94,9 @@ public static class FolderUtility
 
     public static void ClearDirectory(string directoryPath)
     {
+        if (!Directory.Exists(directoryPath))
+            return;
+
         string[] files = Directory.GetFiles(directoryPath);
         string[] directories = Directory.GetDirectories(directoryPath);
 

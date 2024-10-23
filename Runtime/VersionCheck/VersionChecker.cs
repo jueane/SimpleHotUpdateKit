@@ -86,7 +86,8 @@ public static class VersionChecker
 
     public static void WriteVersionFile()
     {
-        File.WriteAllText(VersionInfo.LocalVersionFilepath, FetchedRemoteValue);
+        if (FetchedRemoteValue != null)
+            File.WriteAllText(VersionInfo.LocalVersionFilepath, FetchedRemoteValue);
     }
 
     public static bool IsLastDownloadFinished()
