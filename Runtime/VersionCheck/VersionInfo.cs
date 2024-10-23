@@ -13,6 +13,13 @@ public class VersionInfo
     public List<string> hotUpdateAssemblyList = new List<string>();
     public List<string> preprocessMethodList = new List<string>();
 
+    public List<string> GetPreprocessMethodList()
+    {
+        if (preprocessMethodList == null || preprocessMethodList.Count == 0)
+            return ApplicationConst.config.methodList;
+        return preprocessMethodList;
+    }
+
     public bool IsNewerThan(VersionInfo target)
     {
         return target == null || CompareVersions(codeVersion, target.codeVersion);

@@ -55,9 +55,10 @@ internal class ApplicationLaunch : MonoBehaviour
 
         Application.targetFrameRate = originFrameRate;
 
-        if (VersionChecker.VersionInfo.preprocessMethodList != null)
+        var methodList = VersionChecker.VersionInfo.GetPreprocessMethodList();
+        if (methodList != null)
         {
-            foreach (var curMethod in VersionChecker.VersionInfo.preprocessMethodList)
+            foreach (var curMethod in methodList)
             {
                 yield return CallInit(curMethod);
             }
