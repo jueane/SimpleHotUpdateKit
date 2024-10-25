@@ -6,8 +6,8 @@ using UnityEngine;
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
     [Header("Branch Configurations")]
-    public string mainBranch = "default";
-    public string buildBranch = "development";
+    public string channelCode = "debug";
+    public string packageId = "development";
 
     [Header("Editor Build Settings")]
     public string buildDirectory = "Build";

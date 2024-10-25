@@ -10,9 +10,9 @@ public static class ApplicationConst
 
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.loadRootDirectory);
 
-    public static string MainBranch => config.mainBranch;
+    public static string ChannelCode => config.channelCode;
 
-    public static string BuildBranch => config.buildBranch;
+    public static string PackageId => config.packageId;
 
     public static string CheckUpdateRelativePath;
     public static string CdnDownloadRelativePath;
@@ -47,8 +47,8 @@ public static class ApplicationConst
     public static void RefreshValues()
     {
         Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
-        CheckUpdateRelativePath = $"{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        CdnDownloadRelativePath = $"{MainBranch}_{BuildBranch}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CheckUpdateRelativePath = $"{ChannelCode}_{PackageId}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CdnDownloadRelativePath = $"{ChannelCode}_{PackageId}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CheckUpdateBasePath = $"{CDNServerURL}/{CheckUpdateRelativePath}";
         var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
         BaseRemoteURL_CODE = $"{downloadUrl}/{ApplicationConst.DataFolder}";
