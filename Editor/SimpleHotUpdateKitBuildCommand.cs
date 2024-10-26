@@ -101,7 +101,7 @@ public static class SimpleHotUpdateKitBuildCommand
                     var dstPath = $"{bundledAssetsPath}/{curFileInfo.relativePath}";
                     var dstChecksumPath = $"{dstPath}.checksum";
                     FolderUtility.EnsurePathExists(Directory.GetParent(dstChecksumPath).FullName);
-                    File.Copy(srcPath, dstPath);
+                    File.Copy(srcPath, dstPath, true);
                     File.WriteAllText(dstChecksumPath, curFileInfo.crc.ToString());
                 }
             }
