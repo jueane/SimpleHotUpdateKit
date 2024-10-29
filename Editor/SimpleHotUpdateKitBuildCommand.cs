@@ -87,6 +87,7 @@ public static class SimpleHotUpdateKitBuildCommand
         if (isFullPackage)
         {
             var bundledAssetsPath = Path.Combine(Application.streamingAssetsPath, ApplicationConst.config.loadRootDirectory);
+            FolderUtility.EnsurePathExists(bundledAssetsPath);
             File.WriteAllText(Path.Combine(bundledAssetsPath, ApplicationConst.DataPointerFile), verJson);
 
             foreach (var curAssetList in allAssetList)
