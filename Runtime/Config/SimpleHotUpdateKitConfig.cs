@@ -6,8 +6,7 @@ using UnityEngine;
 public class SimpleHotUpdateKitConfig : ScriptableObject
 {
     [Header("Branch Configurations")]
-    public string channelCode = "default";
-    public string packageId = "development";
+    public string packageSid = "development";
 
     [Header("Editor Build Settings")]
     public string buildDirectory = "Build";
@@ -17,7 +16,7 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     [Header("Update Settings")]
     public bool enableUpdate;
     public bool forceUpdate = true;
-    public string cdnServerURL = "http://yourupdateurl.com";
+    public string cdnServerURL = "http://www.example.com";
     public int downloadConcurrent = 5;
 
     [Header("Download Configurations")]
@@ -26,13 +25,10 @@ public class SimpleHotUpdateKitConfig : ScriptableObject
     public string listFile = "downloadlist.txt";
     public string separateSymbol = ",";
 
-    // 程序集 on cdn
     public string assemblyFolder = "assembly_files";
 
-    // 版本信息
     public string dataPointerFile = "data_version";
 
-    // 补充元数据的DLL目录
     public string additionDlls = "addition_dlls";
 
     [Header("Preprocess")]

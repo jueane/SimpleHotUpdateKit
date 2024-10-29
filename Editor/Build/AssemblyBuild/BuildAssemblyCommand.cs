@@ -82,7 +82,7 @@ public static class BuildAssemblyCommand
     {
         var target = EditorUserBuildSettings.activeBuildTarget;
         string aotAssembliesSrcDir = SettingsUtil.GetAssembliesPostIl2CppStripDir(target);
-        string aotAssembliesDstDir = BuildConst.aot_save_dir_path;
+        string aotAssembliesDstDir = BuildConst.MetaDllSavePath;
         FolderUtility.EnsurePathExists(aotAssembliesDstDir);
 
         foreach (var dll in GetAotList())

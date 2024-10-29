@@ -10,9 +10,7 @@ public static class ApplicationConst
 
     public static string LoadRootPath => Path.Combine(Application.persistentDataPath, config.loadRootDirectory);
 
-    public static string ChannelCode => config.channelCode;
-
-    public static string PackageId => config.packageId;
+    public static string PackageSid => config.packageSid;
 
     public static string CheckUpdateRelativePath;
     public static string CdnDownloadRelativePath;
@@ -32,9 +30,9 @@ public static class ApplicationConst
     public static string DataPointerFile => config.dataPointerFile;
 
     // 补充元数据的DLL目录
-    public static string AOT_Dll_Dir => config.additionDlls;
+    public static string MetaDllDir => config.additionDlls;
 
-    public static string aot_load_dir_path => Path.Combine(ApplicationConst.LoadRootPath, AOT_Dll_Dir);
+    public static string MetaDllLoadPath => Path.Combine(ApplicationConst.LoadRootPath, MetaDllDir);
 
     public const string DataFolder = "Data";
     public const string ResourceFolder = "Res";
@@ -47,8 +45,8 @@ public static class ApplicationConst
     public static void RefreshValues()
     {
         Debug.Log($"{nameof(ApplicationConst)} {nameof(RefreshValues)}");
-        CheckUpdateRelativePath = $"{ChannelCode}_{PackageId}_{PlatformMappingService.GetPlatformPathSubFolder()}";
-        CdnDownloadRelativePath = $"{ChannelCode}_{PackageId}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CheckUpdateRelativePath = $"{PackageSid}_{PlatformMappingService.GetPlatformPathSubFolder()}";
+        CdnDownloadRelativePath = $"{PackageSid}_{PlatformMappingService.GetPlatformPathSubFolder()}";
         CheckUpdateBasePath = $"{CDNServerURL}/{CheckUpdateRelativePath}";
         var downloadUrl = $"{CDNServerURL}/{CdnDownloadRelativePath}";
         BaseRemoteURL_CODE = $"{downloadUrl}/{ApplicationConst.DataFolder}";

@@ -14,15 +14,13 @@ internal class ApplicationLaunch : MonoBehaviour
 
     IEnumerator Start()
     {
-        var originFrameRate = Application.targetFrameRate;
-        Application.targetFrameRate = 10;
-
-        Debug.Log($"Build version: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
         Debug.Log($"{nameof(ApplicationLaunch)}");
+        Debug.Log($"{nameof(ApplicationConst.config.packageSid)}: {ApplicationConst.config.packageSid}");
+        Debug.Log($"{nameof(ApplicationConst.IdentifyCodeConfig.VersionCode)}: {ApplicationConst.IdentifyCodeConfig.VersionCode}");
 
         BundledResourceDeployer.TryDeploy();
 
-        SkipUpdate = (!ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLastDownloadFinished());
+        SkipUpdate = (!ApplicationConst.config.forceUpdate && !NetworkUtil.HasInternetConnectionCached && VersionChecker.IsLocalVersionFileExist());
 
         if (SkipUpdate)
         {
@@ -53,13 +51,12 @@ internal class ApplicationLaunch : MonoBehaviour
             AOTMetaDataManager.Startup();
         }
 
-        Application.targetFrameRate = originFrameRate;
-
         var methodList = VersionChecker.VersionInfo.GetPreprocessMethodList();
         if (methodList != null)
         {
             foreach (var curMethod in methodList)
             {
+                Debug.Log($"Call method: {curMethod}");
                 yield return CallInit(curMethod);
             }
         }

@@ -17,7 +17,7 @@ public static class BuildConst
     public static string FullPathForUploadingDataNoCache => Path.Combine(FolderForUploadingData, ApplicationConst.CheckUpdateRelativePath);
 
     // 构建过程中补充元数据的DLL保存目录
-    public static string aot_save_dir_path => Path.Combine(ProjectPath, FullPathForUploadingData, ApplicationConst.AOT_Dll_Dir);
+    public static string MetaDllSavePath => Path.Combine(ProjectPath, FullPathForUploadingData, ApplicationConst.MetaDllDir);
 
     public static void GenerateBuildVersion()
     {

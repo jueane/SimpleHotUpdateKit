@@ -36,7 +36,7 @@ public static class VersionChecker
         return Fetched;
     }
 
-    public static void FetchSync()
+    public static void SyncFetch()
     {
         Debug.Log($"Get remote version {dataPointerUrl}");
         var rValue = RemoteReader.GetRemoteValue(dataPointerUrl);
@@ -90,7 +90,7 @@ public static class VersionChecker
             File.WriteAllText(VersionInfo.LocalVersionFilepath, FetchedRemoteValue);
     }
 
-    public static bool IsLastDownloadFinished()
+    public static bool IsLocalVersionFileExist()
     {
         return File.Exists(VersionInfo.LocalVersionFilepath);
     }

@@ -15,7 +15,7 @@ public static class SimpleHotUpdateKitBuildCommand
         Debug.Log($"Build hot update content, isFullPackage: {isFullPackage}, includeResource: {includeResource}");
 
         Debug.Log($"Get remote version info");
-        VersionChecker.FetchSync();
+        VersionChecker.SyncFetch();
         if (!isFullPackage)
         {
             if (!VersionChecker.Fetched)
@@ -69,7 +69,7 @@ public static class SimpleHotUpdateKitBuildCommand
             buildResourceFunc?.Invoke(BuildConst.FullPathForUploadingDataRes);
             if (FolderUtility.IsDirectoryEmpty(BuildConst.FullPathForUploadingDataRes))
             {
-                Debug.Log($"Build Resources: no resource found");
+                Debug.LogWarning($"Build Resources: no resource found");
                 includeResource = false;
             }
         }

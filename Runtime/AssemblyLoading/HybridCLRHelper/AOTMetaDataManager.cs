@@ -37,7 +37,7 @@ public class AOTMetaDataManager
         {
             foreach (var aotDllName in GetAotList())
             {
-                string asFilepath = Path.Combine(ApplicationConst.aot_load_dir_path, $"{aotDllName}.bytes");
+                string asFilepath = Path.Combine(ApplicationConst.MetaDllLoadPath, $"{aotDllName}.bytes");
 
                 if (!File.Exists(asFilepath))
                 {
